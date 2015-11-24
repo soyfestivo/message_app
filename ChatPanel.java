@@ -15,13 +15,14 @@ public class ChatPanel extends JPanel implements ActionListener
    private int numUsers;            //number of users
    private User me;                 //this user's information
    private int numMsgs = 500;             //number of messages in a conversation
+   private JPanel msgPan;           //panel for all of the messages   
    private Backend backend;
    
    
    public ChatPanel(User u, Backend b)
    {
       JPanel mainPan;          //main panel for messages, message text field, and send button
-      JPanel msgPan;           //panel for all of the messages   
+      
       JPanel sendPan;          //panel holding components for sending message
       JScrollPane scrollMsg;   //scroll pane for msgPanel
       JScrollPane scrollText;  //scroll pane for text area
@@ -71,7 +72,8 @@ public class ChatPanel extends JPanel implements ActionListener
         // Will only execute if the button is pressed
       if(e.getSource() == sendButton)
         {
-         backend.sendMessage(user, msgField.getText());
+         msgPan.add(new Message(msgField.getText(), "soyfestivo")); 
+         //backend.sendMessage(user, msgField.getText());
          //parentClass.actionPerformed(this, parseInput());
          //textBox.setText("");
       }
