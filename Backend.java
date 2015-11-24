@@ -21,6 +21,7 @@ public class Backend {
 	public Backend() {
 		setupThread();
 		incomingListener.start();
+		users = new ArrayList<User>();
 
 		try {
 			InetAddress myAddress = InetAddress.getLocalHost();
@@ -36,7 +37,7 @@ public class Backend {
 		//sendMessage(new User("soyfestivo", "192.168.0.111"), "Hello OMG so cool it worked!!!");
 
 		
-		Thread console = new Thread() {
+		/*Thread console = new Thread() {
 			public void run() {
 				Scanner scanner = new Scanner(System.in);
 				boolean foundCommand;
@@ -60,8 +61,12 @@ public class Backend {
 			}
 		};
 
-		console.start();
+		console.start();*/
 
+	}
+
+	public ArrayList<User> getUsers() {
+		return users;
 	}
 
 	private class MiniScan extends Thread {
@@ -97,8 +102,11 @@ public class Backend {
 		}
 	}
 
+	public void addStaticUser(User u) {
+		users.add(u);
+	}
+
 	public void scanLAN(int split) {
-		users = new ArrayList<User>();
 		int groupSize = 256 / split;
 		for(int i = 0; i < split; i++) {
 			new MiniScan(groupSize * i, (groupSize * i) + groupSize - 1);
