@@ -17,10 +17,13 @@ public class UIWindow extends JFrame {
 	private ArrayList<User> users;
 
 	public UIWindow(String title) 
-	// PRE: title is valid
+	//PRE:  title is valid
 	//POST: new UIWindow created
 	{
-		super(title);						//call constructor of superclass 
+		super(title);						      //call constructor of superclass 
+      
+      int width = 600;                    //width of the frame
+      int height = 400;                   //height of the frame
 
 		setLayout(new BorderLayout());		//set layout of frame to border layout
 		backend = new Backend();
@@ -29,12 +32,14 @@ public class UIWindow extends JFrame {
 		users = backend.getUsers();
 
 		chatPanel = new ChatPanel(users.get(0), backend);
+      
+      add(new JButton("temp"), BorderLayout.WEST); //////////remove
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	//set "close" functionality to close frame
-		setSize(600, 400);								//set size of frame
-		add(chatPanel, BorderLayout.CENTER);			//add the option bar to UI
-		pack();											//force resize elements of UI
-		setVisible(true);								//make UI visible
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	 //set "close" functionality to close frame
+		setSize(width, height);								    //set size of frame
+		add(chatPanel, BorderLayout.CENTER);			    //add the option bar to UI
+		//pack();											          //force resize elements of UI
+		setVisible(true);								          //make UI visible
 	}
 
 
