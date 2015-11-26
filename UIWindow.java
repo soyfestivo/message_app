@@ -12,9 +12,11 @@ import java.util.ArrayList;
 
 //class for user interface
 public class UIWindow extends JFrame {
-	private Backend backend;
-	private ChatPanel chatPanel; // main panel
-	private ArrayList<User> users;
+	private Backend backend;         //insance of Backend class
+	private ChatPanel chatPanel;     //panel for displaying messages and send button and text area
+   private UserPanel userPanel;     //panel to display the online Users
+	private ArrayList<User> users;   //array of Users
+   private String myUsername;       //curent User's username - users(0) 
 
 	public UIWindow(String title) 
 	//PRE:  title is valid
@@ -24,26 +26,55 @@ public class UIWindow extends JFrame {
       
       int width = 600;                    //width of the frame
       int height = 400;                   //height of the frame
+      
 
 		setLayout(new BorderLayout());		//set layout of frame to border layout
 		backend = new Backend();
 
-		backend.addStaticUser(new User("soyfestivo", "192.168.56.1")); // for demoing
+      setMyUsername();
+
+		backend.addStaticUser(new User(myUsername, "192.168.56.1")); // for demoing
 		users = backend.getUsers();
 
-		chatPanel = new ChatPanel(users.get(0), backend);
-      
-      add(new JButton("temp"), BorderLayout.WEST); //////////remove
+		chatPanel = new ChatPanel(users.get(0), backend, myUsername);
+      userPanel = new UserPanel(users, backend);
+
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	 //set "close" functionality to close frame
 		setSize(width, height);								    //set size of frame
-		add(chatPanel, BorderLayout.CENTER);			    //add the option bar to UI
+		add(chatPanel, BorderLayout.CENTER);			    
+      add(userPanel, BorderLayout.WEST);
 		//pack();											          //force resize elements of UI
 		setVisible(true);								          //make UI visible
 	}
 
 
-	public static void main(String[] args) {
+   private void setMyUsername()
+   //PRE:  myUsername is delcared
+   //POST: sets myUsername to user's chosen username
+   {
+      String username = "";
+      
+      while(username.equals("") || username == null || username.equals(" ")) //keep prompting
+      {                                                                      //   until valid
+         username = JOptionPane.showInputDialog(null, "What would you like your username to be?");
+         
+         if(username == null)
+            username = "";
+      }
+      myUsername = username;      
+      //return username;
+   }
+   
+   public String getMyUsername()
+   //PRE:  myUsername is non-blank and not null
+   //POST: FCTVAL == myUsername
+   {
+      return myUsername;
+   }
+
+
+   public static void main(String[] args) {
 		new UIWindow("CS 342 Final Project, Messaging app");
 	}
 }

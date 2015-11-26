@@ -17,21 +17,22 @@ public class ChatPanel extends JApplet implements ActionListener
    //private int numMsgs;             //number of messages in a conversation
    private JPanel msgPan;           //panel for all of the messages   
    private Backend backend;         //instance of Backend
+   private String myUsername;       //current User's username   
    
    
-   public ChatPanel(User u, Backend b)
+   public ChatPanel(User u, Backend b, String uname)
+   //PRE:  
+   //POST: 
    {
       JPanel mainPan;          //main panel for messages, message text field, and send button
       
       JPanel sendPan;          //panel holding components for sending message
-      JScrollPane scrollText;  //scroll pane for text area
-
-      String myUsername;       //current User's username
-      
-      myUsername = getMyUsername();    
+      JScrollPane scrollText;  //scroll pane for text area   
 
       backend = b;
       user = u;
+      myUsername = uname;
+      
       mainPan = new JPanel();
       mainPan.setLayout(new BorderLayout());
       add(mainPan);
@@ -39,7 +40,8 @@ public class ChatPanel extends JApplet implements ActionListener
       sendPan = new JPanel();
       sendPan.setLayout(new BorderLayout());
       mainPan.add(sendPan, BorderLayout.SOUTH);
-      //text to send
+      
+                                                      //set up text to send
       msgField = new JTextArea(2, 25);
       scrollText = new JScrollPane(msgField);
       msgField.setLineWrap(true);
@@ -47,15 +49,15 @@ public class ChatPanel extends JApplet implements ActionListener
       sendPan.add(scrollText, BorderLayout.CENTER);
 
 
-      //send button
+                                                      //set up send button
       sendButton = new JButton("Send");
       sendPan.add(sendButton, BorderLayout.EAST);
       sendButton.addActionListener(this);
 
-
+                                                      //set up area for all messages from this chat
       msgPan = new JPanel();
-      msgPan.setLayout(new BoxLayout(msgPan, BoxLayout.PAGE_AXIS)); // from top to bottom
-      scrollMsg = new JScrollPane(msgPan);
+      msgPan.setLayout(new BoxLayout(msgPan, BoxLayout.PAGE_AXIS)); //from top to bottom
+      scrollMsg = new JScrollPane(msgPan);                          //add scroll bar
       mainPan.add(scrollMsg, BorderLayout.CENTER);    
       
 //////////////// for testing REMOVE when complete /////////////////      
@@ -76,18 +78,34 @@ public class ChatPanel extends JApplet implements ActionListener
       if(e.getSource() == sendButton)
       {
          //numMsgs++;
-         msgPan.add(new JLabel("  "));                            //added for spacing between messages
-         msgPan.add(new Message(msgField.getText(), "soyfestivo")); 
+         msgPan.add(new Message(msgField.getText(), myUsername)); 
          //backend.sendMessage(user, msgField.getText());
          //parentClass.actionPerformed(this, parseInput());
          //textBox.setText("");
+         afterMessage();
+      }
+   }
+   
+   public void msgReceived(String message, String username)
+   //PRE:  message and username are initialized
+   //POST: adds a new Message to msgPan with the text message and username
+   {
+      msgPan.add(new Message(message, username));
+      afterMessage();
+   }
+   
+   
+   private void afterMessage()
+   //PRE:  msgPan and scrollMsg are initialized 
+   //POST: a blank JLabel is added to msgPan, msgField text is set to empty, 
+   //      the panel is revalidated, and the scollMsg is pushed on to the bottom
+   {
+         //msgPan.add(new JLabel("  "));                           //add space between messages
          msgField.setText("");                                   //clear the text in msgField
          this.revalidate();                                      //refresh
          JScrollBar bar = scrollMsg.getVerticalScrollBar();      //move the scroll bar to the bottom
          bar.setValue(bar.getMaximum());
-      }
    }
-   
    
 /*   public void paint(Graphics g)
    {
@@ -95,21 +113,5 @@ public class ChatPanel extends JApplet implements ActionListener
    
    } */
    
-   private String getMyUsername()
-   //PRE:
-   //POST: FCTVAL == username; returns the string the user wants as their username
-   {
-      String username = "";
-      
-      while(username.equals("") || username.equals(null) || username.equals(" ")) //keep prompting
-      {                                                                           //until valid
-         username = JOptionPane.showInputDialog(null, "What would you like your username to be?");
-         
-         if(username == null)
-            username = "";
-      }
-      
-      return username;
-   }
 
 } //end class
