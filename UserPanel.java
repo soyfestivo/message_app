@@ -12,6 +12,7 @@ public class UserPanel extends JApplet implements ActionListener
       private JPanel mainPan;              //main panel for this class
 
       private User staticUser;             //user at a static ip address
+      private int numUsers;                //total number of users online
 
       public UserPanel(ArrayList<User> u, Backend b)
       //PRE:
@@ -19,7 +20,7 @@ public class UserPanel extends JApplet implements ActionListener
       {
          users = u;
          backend = b;
-         
+
          mainPan = new JPanel();
          mainPan.setLayout(new BoxLayout(mainPan, BoxLayout.PAGE_AXIS)); //from top to bottom
          //mainPan.setLayout(new GridLayout(2,1));
@@ -42,25 +43,28 @@ public class UserPanel extends JApplet implements ActionListener
       }
 
       public void updatePanel()
+      // POST: updates UserPanel with the correct number of user buttons
       {
          // remove all old buttons prior to adding new ones
          if (buttons != null)
          {
-            for (int i = 2; i < buttons.size(); i++)
+            while(buttons.size() > 2)
             {
-                mainPan.remove(buttons.get(i));
+                mainPan.remove(buttons.get(buttons.size() - 1));
+                buttons.remove(buttons.size() - 1);
             }
          }
 
          // iterate through each user
-         for (int i = 2; i < users.size(); i++)
+         for (int i = 0; i < users.size(); i++)
          {
+            int j = i + 2;
             // add a button for each user action
             if(users.get(i) != null)
             {
                 buttons.add(new JButton(users.get(i).getUsername()));
-                mainPan.add(buttons.get(i));
-                buttons.get(i).addActionListener(this);
+                mainPan.add(buttons.get(j));
+                buttons.get(j).addActionListener(this);
             }
          }
       }
@@ -68,19 +72,44 @@ public class UserPanel extends JApplet implements ActionListener
       public void actionPerformed(ActionEvent e)
       {
 
-         if(e.getSource() == buttons.get(0))     // User selected add IP manually button
+         if(e.getSource() == buttons.get(0))    // User selected add IP manually button
          {
-            String host = addIP();           // Prompt user for IP
+            String host = addIP();              // Prompt user for IP
            
             staticUser = new User(host, host);  // Create new user based on static IP
 
             backend.addStaticUser(staticUser);  // Add static user to list
 
+            users = backend.getUsers();         // Update this users list
+         
+            updatePanel();
+
+            mainPan.revalidate();
+
          }
 
          if(e.getSource() == buttons.get(1))    // User selected button to find online users
          {
+           
+            // TODO - Call scan for IP method from backend and updatePanel
 
+         }
+
+         if(e.getSource() instanceof JButton &&
+            e.getSource() != buttons.get(0)  &&
+            e.getSource() != buttons.get(1)  )
+         {
+            users = backend.getUsers();         // Update this users list
+
+            for(int i = 0; i < users.size(); i++)
+            {
+                if( ((JButton)e.getSource()).getText().equals(users.get(i).getUsername()))
+                {
+                    //Display chat info in chatPanel
+                    // pass username and ip to chat panel method that will display a message panel
+
+                }
+            }
 
          }
 
@@ -90,27 +119,17 @@ public class UserPanel extends JApplet implements ActionListener
       //POST: FCTVAL == host string
       {  
          String host;     // IP address from user
-
-         try 
-         {   
-             //String to store the user's input
-             host = JOptionPane.showInputDialog("Please enter an IP"
-                     + " address (ie. 192.168.0.111).");
-             System.out.println(host);
+             
+         host = ""; 
     
-             // TODO - Could add regular expresion here to verify input is valid
+         // TODO - Could add regular expresion here to verify input is valid
 
-             while(host.equals("") || host == null || host.equals(" ")) // keep prompting
-             {                                                                  
-                host = JOptionPane.showInputDialog(null, "Please enter an IP addres"
+         while(host.equals("") || host == null || host.equals(" ")) // keep prompting
+         {                                                                  
+             host = JOptionPane.showInputDialog(null, "Please enter an IP addres"
                                                    + " (ie. 192.168.0.111).");
-                if(host == null)
-                    host = ""; 
-             }   
-         }   
-         catch(NullPointerException npe)       //An error occured, so catch the exception
-         {   
-             host = "";
+             if(host == null)
+                host = ""; 
          }   
 
          return host;
