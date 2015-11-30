@@ -43,7 +43,7 @@ public class UIWindow extends JFrame
 		backend.addStaticUser(backend.getMyIP()); // add current User
 		users = backend.getUsers();
 
-		chatPanel = new ChatPanel(users.get(0), backend, myUsername);
+		chatPanel = users.get(0).getChatPanel();
       userPanel = new UserPanel(users, backend);
       chatPanel.msgReceived("You can send messages to yourself here or select one of the users from the left", "yourself");
 
