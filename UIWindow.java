@@ -63,6 +63,8 @@ public class UIWindow extends JFrame
    {
       remove(chatPanel);
       add(user.getChatPanel(), BorderLayout.CENTER);
+      chatPanel = user.getChatPanel();
+      revalidate();
    }
 
 
