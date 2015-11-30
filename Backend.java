@@ -78,11 +78,12 @@ public class Backend {
          setMyUsername();
           Enumeration<NetworkInterface> addresses = NetworkInterface.getNetworkInterfaces();
           NetworkInterface ni;
-          while((ni = addresses.nextElement()) != null) {
+          while(addresses.hasMoreElements() && (ni = addresses.nextElement()) != null) {
           	 Enumeration<InetAddress> e = ni.getInetAddresses();
           	 InetAddress ia;
-          	 while((ia = e.nextElement()) != null) {
-          	 	System.out.println("~~" + ia.getLocalHost().getHostAddress());
+          	 System.out.println("Address: " + ni.toString());
+          	 while(e.hasMoreElements() && (ia = e.nextElement()) != null) {
+          	 	System.out.println("  " + ia.getLocalHost().getHostAddress());
           	 }
           	
           }
@@ -95,7 +96,7 @@ public class Backend {
 		}
 		catch(Exception e) 
       {
-			System.err.println("Error Getting my own IP");
+			System.err.println("Error Getting my own IP" + e.toString());
 			System.exit(0);
 		}
 
