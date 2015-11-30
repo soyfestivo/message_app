@@ -1,3 +1,9 @@
+// Programmers:  Stephen Selke, Chris Griffith, Karen Bykowski
+// Assignment:   Project 4 - Messenger App
+// Date:         December 3, 2015
+// Description:  
+//        
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.GridLayout;

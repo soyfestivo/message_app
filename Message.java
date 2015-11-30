@@ -1,10 +1,16 @@
+// Programmers:  Stephen Selke, Chris Griffith, Karen Bykowski
+// Assignment:   Project 4 - Messenger App
+// Date:         December 3, 2015
+// Description:  Panel for displaying each of the messages
+//        
+
 import javax.swing.*;
 import java.awt.*;
 
 public class Message extends JPanel {
 	public Message(String m, String username) {
-   //PRE:
-   //POST:
+   //PRE: m and username are initialized
+   //POST: fills a JTextArea with the sender of the message and their message
       JTextArea msg;                                        //text area for new messages
    
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));

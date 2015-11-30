@@ -1,3 +1,9 @@
+// Programmers:  Stephen Selke, Chris Griffith, Karen Bykowski
+// Assignment:   Project 4 - Messenger App
+// Date:         December 3, 2015
+// Description:  
+//        
+
 import java.util.ArrayList;
 import java.awt.Graphics;
 import javax.swing.*;
@@ -74,12 +80,11 @@ public class ChatPanel extends JApplet implements ActionListener
    public void actionPerformed(ActionEvent e)
     // POST: FCTVAL == executes the parseInput function, in the event that the button is pressed
     {
-        // Will only execute if the button is pressed
-      if(e.getSource() == sendButton)
+      if(e.getSource() == sendButton)     // Will only execute if the button is pressed
       {
          //numMsgs++;
          msgPan.add(new Message(msgField.getText(), myUsername)); 
-         //backend.sendMessage(user, msgField.getText());
+         backend.sendMessage(user, msgField.getText());
          //parentClass.actionPerformed(this, parseInput());
          //textBox.setText("");
          afterMessage();
@@ -94,24 +99,26 @@ public class ChatPanel extends JApplet implements ActionListener
       afterMessage();
    }
    
+   public void newMessage()
+   //PRE:
+   //POST: If a new message has been received, calls msgReceived which creates a new Message
+   //      with the message and username
+   {
+      if(backend.isMsgRcvd())             //if a new message has been received
+      {
+         msgReceived(backend.getInUser(), backend.getInMessage());
+      }
+   }
    
    private void afterMessage()
    //PRE:  msgPan and scrollMsg are initialized 
    //POST: a blank JLabel is added to msgPan, msgField text is set to empty, 
    //      the panel is revalidated, and the scollMsg is pushed on to the bottom
    {
-         //msgPan.add(new JLabel("  "));                           //add space between messages
          msgField.setText("");                                   //clear the text in msgField
          this.revalidate();                                      //refresh
          JScrollBar bar = scrollMsg.getVerticalScrollBar();      //move the scroll bar to the bottom
          bar.setValue(bar.getMaximum());
-   }
-   
-/*   public void paint(Graphics g)
-   {
-      super.paint(g);
-   
-   } */
-   
+   }  
 
 } //end class

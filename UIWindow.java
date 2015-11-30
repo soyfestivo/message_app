@@ -1,3 +1,9 @@
+// Programmers:  Stephen Selke, Chris Griffith, Karen Bykowski
+// Assignment:   Project 4 - Messenger App
+// Date:         December 3, 2015
+// Description:  Main GUI for the messenger application
+//        
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.JButton;
@@ -11,7 +17,8 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 
 //class for user interface
-public class UIWindow extends JFrame {
+public class UIWindow extends JFrame 
+{
 	private Backend backend;         //insance of Backend class
 	private ChatPanel chatPanel;     //panel for displaying messages and send button and text area
    private UserPanel userPanel;     //panel to display the online Users
@@ -19,7 +26,7 @@ public class UIWindow extends JFrame {
    private String myUsername;       //curent User's username - users(0) 
 
 	public UIWindow(String title) 
-	//PRE:  title is valid
+	//PRE:  title is initialized
 	//POST: new UIWindow created
 	{
 		super(title);						      //call constructor of superclass 
@@ -31,9 +38,9 @@ public class UIWindow extends JFrame {
 		setLayout(new BorderLayout());		//set layout of frame to border layout
 		backend = new Backend();
 
-      setMyUsername();
+      myUsername = backend.getMyUsername();
 
-		backend.addStaticUser(new User(myUsername, "192.168.56.1")); // for demoing
+		backend.addStaticUser(new User(myUsername, backend.getMyIP())); // add current User
 		users = backend.getUsers();
 
 		chatPanel = new ChatPanel(users.get(0), backend, myUsername);
@@ -46,10 +53,11 @@ public class UIWindow extends JFrame {
       add(userPanel, BorderLayout.WEST);
 		//pack();											          //force resize elements of UI
 		setVisible(true);								          //make UI visible
+      
 	}
 
 
-   private void setMyUsername()
+/*   private void setMyUsername()
    //PRE:  myUsername is delcared
    //POST: sets myUsername to user's chosen username
    {
@@ -71,10 +79,11 @@ public class UIWindow extends JFrame {
    //POST: FCTVAL == myUsername
    {
       return myUsername;
-   }
+   } */
 
 
-   public static void main(String[] args) {
+   public static void main(String[] args) 
+   {
 		new UIWindow("CS 342 Final Project, Messaging app");
 	}
 }
