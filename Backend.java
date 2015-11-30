@@ -307,6 +307,12 @@ public class Backend {
    //POST:
    {
       msgRcvd = true;
+      for(User u : users) {
+      	if(u.getUsername().equals(username)) {
+      		u.getChatPanel().msgReceived(message, username);
+      		return;
+      	}
+      }
 		System.out.println("@" + username + ": " + message);
 	}
 
