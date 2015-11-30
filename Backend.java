@@ -41,7 +41,15 @@ public class Backend {
       
       while(username.equals("") || username == null || username.equals(" ")) //keep prompting
       {                                                                      //   until valid
-         username = JOptionPane.showInputDialog(null, "What would you like your username to be?");
+         username = JOptionPane.showInputDialog(null, "What would you like your username to be?\n"
+                                                + "The length must be 10 characters or less");
+         
+         if(username.length() > 10)
+         {
+            JOptionPane.showMessageDialog(null, "Username must be less than 10 characters",
+                                          "Username too long", JOptionPane.ERROR_MESSAGE);
+            username = "";
+         }
          
          if(username == null)
             username = "";
