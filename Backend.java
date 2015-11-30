@@ -11,6 +11,7 @@ import java.lang.Thread;
 import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
+import java.util.Enumeration;
 
 public class Backend {
 	private final int PUBLIC_PORT = 7007;                 //port to connect to
@@ -75,6 +76,16 @@ public class Backend {
 		try 
       {
          setMyUsername();
+          Enumeration<NetworkInterface> addresses = NetworkInterface.getNetworkInterfaces();
+          NetworkInterface ni;
+          while((ni = addresses.nextElement()) != null) {
+          	 Enumeration<InetAddress> e = ni.getInetAddresses();
+          	 InetAddress ia;
+          	 while((ia = e.nextElement()) != null) {
+          	 	System.out.println("~~" + ia.getLocalHost().getHostAddress());
+          	 }
+          	
+          }
 			InetAddress myAddress = InetAddress.getLocalHost();
          myIP = myAddress.getHostAddress();
 			//System.out.println("My address: " + myAddress.getHostAddress());
