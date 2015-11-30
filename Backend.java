@@ -72,7 +72,7 @@ public class Backend {
 			//System.out.println("My address: " + myAddress.getHostAddress());
          System.out.println("My address: " + myIP);
 			//me = new User("soyfestivo", myAddress.getHostAddress());
-         me = new User(myUsername, myAddress.getHostAddress());
+         me = new User(myUsername, myAddress.getHostAddress(), this);
 		}
 		catch(Exception e) 
       {
@@ -180,7 +180,7 @@ public class Backend {
    {
 		int groupSize = 256 / split;
 		for(int i = 0; i < split; i++) 
-      {
+        {
 			new MiniScan(groupSize * i, (groupSize * i) + groupSize - 1);
 		}
 	}
@@ -210,7 +210,7 @@ public class Backend {
 			out.close();
 			in.close();
 			connection.close();
-			return new User(username, host);
+			return new User(username, host, this);
 		}
 		catch(Exception e) {}
 		return null;
