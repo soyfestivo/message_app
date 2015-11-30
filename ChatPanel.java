@@ -37,7 +37,7 @@ public class ChatPanel extends JApplet implements ActionListener
 
       backend = b;
       user = u;
-      myUsername = uname;
+      myUsername = backend.getMyUsername();
       
       mainPan = new JPanel();
       mainPan.setLayout(new BorderLayout());
