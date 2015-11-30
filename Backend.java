@@ -75,6 +75,14 @@ public class Backend {
 
 		try 
       {
+
+      	InetAddress[] n = InetAddress.getAllByName("google.com");
+
+      	System.out.println("Address: " + n.toString());
+          	 for(InetAddress iiiiii : n) {
+          	 	System.out.println("~  " + iiiiii.getLocalHost().getHostAddress());
+          	 }
+
          setMyUsername();
           Enumeration<NetworkInterface> addresses = NetworkInterface.getNetworkInterfaces();
           NetworkInterface ni;
