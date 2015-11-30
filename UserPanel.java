@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class UserPanel extends JApplet implements ActionListener
 {
       private Backend backend;             //instance of Backend
+      private UIWindow window;             //instance of UI Window
       private ArrayList<User> users;       //array of users
       private ArrayList<JButton> buttons;  //array of user buttons
       private JPanel mainPan;              //main panel for this class
@@ -20,17 +21,23 @@ public class UserPanel extends JApplet implements ActionListener
       private User staticUser;             //user at a static ip address
       private int numUsers;                //total number of users online
 
-      public UserPanel(ArrayList<User> u, Backend b)
+      public UserPanel(ArrayList<User> u, Backend b, UIWindow window)
       //PRE:
       //POST:
       {
-         users = u;
-         backend = b;
+         JLabel myIP;                      //lable at top of panel for ip
+
+         this.users = u;
+         this.backend = b;
+         this.window = window;
 
          mainPan = new JPanel();
          mainPan.setLayout(new BoxLayout(mainPan, BoxLayout.PAGE_AXIS)); //from top to bottom
          //mainPan.setLayout(new GridLayout(2,1));
          add(mainPan);
+
+         myIP = new JLabel("IP: " + users.get(0).getHost());
+         mainPan.add(myIP);
 
          // initialize array of buttons
          buttons = new ArrayList<JButton>();
@@ -111,7 +118,9 @@ public class UserPanel extends JApplet implements ActionListener
                 {
                     //Display chat info in chatPanel
                     // pass username and ip to chat panel method that will display a message panel
-
+                    window.changeToUser(users.get(i));
+                    //user.get(i).getChatPanel();
+            
                 }
             }
 
