@@ -44,7 +44,7 @@ public class UIWindow extends JFrame
 		users = backend.getUsers();
 
 		chatPanel = users.get(0).getChatPanel();
-      userPanel = new UserPanel(users, backend);
+      userPanel = new UserPanel(users, backend, this);
       chatPanel.msgReceived("You can send messages to yourself here or select one of the users from the left", "yourself");
 
 		
@@ -56,6 +56,14 @@ public class UIWindow extends JFrame
 		setVisible(true);								          //make UI visible
       
 	}
+
+   public void changeToUser(User user) 
+   // PRE: user is valid
+   //POST: will change the ChatPanel to the new user's chatPanel
+   {
+      remove(chatPanel);
+      add(user.getChatPanel(), BorderLayout.CENTER);
+   }
 
 
 /*   private void setMyUsername()
