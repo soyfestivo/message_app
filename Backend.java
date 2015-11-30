@@ -41,7 +41,15 @@ public class Backend {
       
       while(username.equals("") || username == null || username.equals(" ")) //keep prompting
       {                                                                      //   until valid
-         username = JOptionPane.showInputDialog(null, "What would you like your username to be?");
+         username = JOptionPane.showInputDialog(null, "What would you like your username to be?\n"
+                                                + "The length must be 10 characters or less");
+         
+         if(username.length() > 10)
+         {
+            JOptionPane.showMessageDialog(null, "Username must be less than 10 characters",
+                                          "Username too long", JOptionPane.ERROR_MESSAGE);
+            username = "";
+         }
          
          if(username == null)
             username = "";
@@ -72,7 +80,7 @@ public class Backend {
 			//System.out.println("My address: " + myAddress.getHostAddress());
          System.out.println("My address: " + myIP);
 			//me = new User("soyfestivo", myAddress.getHostAddress());
-         me = new User(myUsername, myAddress.getHostAddress());
+         me = new User(myUsername, myAddress.getHostAddress(), this);
 		}
 		catch(Exception e) 
       {
@@ -180,7 +188,7 @@ public class Backend {
    {
 		int groupSize = 256 / split;
 		for(int i = 0; i < split; i++) 
-      {
+        {
 			new MiniScan(groupSize * i, (groupSize * i) + groupSize - 1);
 		}
 	}
@@ -210,7 +218,7 @@ public class Backend {
 			out.close();
 			in.close();
 			connection.close();
-			return new User(username, host);
+			return new User(username, host, this);
 		}
 		catch(Exception e) {}
 		return null;
