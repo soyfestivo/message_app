@@ -118,7 +118,7 @@ public class UserPanel extends JApplet implements ActionListener
                 {
                     //Display chat info in chatPanel
                     // pass username and ip to chat panel method that will display a message panel
-                  System.out.println("clicked:" + users.get(i).getUsername());
+                  //System.out.println("clicked:" + users.get(i).getUsername());
                     window.changeToUser(users.get(i));
                     //user.get(i).getChatPanel();
             

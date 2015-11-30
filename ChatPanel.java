@@ -86,7 +86,7 @@ public class ChatPanel extends JApplet implements ActionListener
          msgPan.add(new Message(msgField.getText(), myUsername)); 
          backend.sendMessage(user, msgField.getText());
          //parentClass.actionPerformed(this, parseInput());
-         //textBox.setText("");
+         msgField.setText("");
          afterMessage();
       }
    }
@@ -115,7 +115,7 @@ public class ChatPanel extends JApplet implements ActionListener
    //POST: a blank JLabel is added to msgPan, msgField text is set to empty, 
    //      the panel is revalidated, and the scollMsg is pushed on to the bottom
    {
-         msgField.setText("");                                   //clear the text in msgField
+         //msgField.setText("");                                   //clear the text in msgField
          this.revalidate();                                      //refresh
          JScrollBar bar = scrollMsg.getVerticalScrollBar();      //move the scroll bar to the bottom
          bar.setValue(bar.getMaximum());
