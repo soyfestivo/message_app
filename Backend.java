@@ -163,11 +163,15 @@ public class Backend {
 		}
 	}
 
-	public void addStaticUser(User u) 
+	public User addStaticUser(String host) 
    //PRE:
    //POST:
    {
-		users.add(u);
+   		User u = handshake(host);
+   		if(u != null) {
+   			users.add(u);
+   		}
+   		return u;
 	}
 
 	public void scanLAN(int split) 
