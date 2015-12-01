@@ -13,7 +13,8 @@ import java.util.Scanner;
 import javax.swing.JOptionPane;
 import java.util.Enumeration;
 
-public class Backend {
+public class Backend 
+{
 	private final int PUBLIC_PORT = 7007;                 //port to connect to
 	private final String PROTOCOL_WHOIS = "WhoIs";        //
 	private final String PROTOCOL_FROM = "MessageFrom";   //
@@ -34,74 +35,56 @@ public class Backend {
 		new Backend();
 	}*/
    
-   private void setMyUsername()
-   //PRE:  myUsername is delcared
-   //POST: sets myUsername to user's chosen username
-   {
-      String username = "";
-      
-      while(username.equals("") || username == null || username.equals(" ")) //keep prompting
-      {                                                                      //   until valid
-         username = JOptionPane.showInputDialog(null, "What would you like your username to be?\n"
-                                                + "The length must be 10 characters or less");
-         
-         if(username.length() > 10)
-         {
-            JOptionPane.showMessageDialog(null, "Username must be less than 10 characters",
-                                          "Username too long", JOptionPane.ERROR_MESSAGE);
-            username = "";
-         }
-         
-         if(username == null)
-            username = "";
-      }
-      myUsername = username;      
-      //return username;
-   }
-   
-   public String getMyUsername()
-   //POST: FCTVAL == myUsername
-   {
-      return myUsername;
-   }
-
 	public Backend() 
    //PRE:
    //POST:
-   {
+   {  //
+      InetAddress[] n;              //
+      Enumeration<NetworkInterface> addresses;   
+      NetworkInterface ni;
+      Enumeration<InetAddress> e;
+      InetAddress ia;
+      InetAddress myAddress;
+   
 		setupThread();
 		incomingListener.start();
 		users = new ArrayList<User>();
 
 		try 
-      {
+      { 
 
-      	InetAddress[] n = InetAddress.getAllByName("google.com");
+      	n = InetAddress.getAllByName("google.com");
 
       	System.out.println("Address: " + n.toString());
-          	 for(InetAddress iiiiii : n) {
+          	 for(InetAddress iiiiii : n) 
+             {
           	 	System.out.println("~  " + iiiiii.getLocalHost().getHostAddress());
           	 }
 
-         setMyUsername();
-          Enumeration<NetworkInterface> addresses = NetworkInterface.getNetworkInterfaces();
-          NetworkInterface ni;
-          while(addresses.hasMoreElements() && (ni = addresses.nextElement()) != null) {
-          	 Enumeration<InetAddress> e = ni.getInetAddresses();
-          	 InetAddress ia;
+          setMyUsername();          //get the user's desired username
+          
+          addresses = NetworkInterface.getNetworkInterfaces();
+
+          while(addresses.hasMoreElements() && (ni = addresses.nextElement()) != null) 
+          {
+          	 e = ni.getInetAddresses();
+          	 
           	 System.out.println("Address: " + ni.toString());
-          	 while(e.hasMoreElements() && (ia = e.nextElement()) != null) {
+          	 while(e.hasMoreElements() && (ia = e.nextElement()) != null) 
+             {
           	 	System.out.println("  " + ia.getLocalHost().getHostAddress());
           	 }
           	
           }
-			InetAddress myAddress = InetAddress.getLocalHost();
-         myIP = myAddress.getHostAddress();
+          
+			 myAddress = InetAddress.getLocalHost();
+          myIP = myAddress.getHostAddress();
 			//System.out.println("My address: " + myAddress.getHostAddress());
-         System.out.println("My address: " + myIP);
+          System.out.println("My address: " + myIP);   /////////////////////REMOVE when complete; for debugging
 			//me = new User("soyfestivo", myAddress.getHostAddress());
-         me = new User(myUsername, myAddress.getHostAddress(), this);
+          me = new User(myUsername, myAddress.getHostAddress(), this);
 		}
+
 		catch(Exception e) 
       {
 			System.err.println("Error Getting my own IP" + e.toString());
@@ -140,9 +123,43 @@ public class Backend {
 
 	}
 
+
+   private void setMyUsername()
+   //PRE:  myUsername is delcared
+   //POST: sets myUsername to user's chosen username
+   {
+      String username;     // String representation of the current user
+      
+      username = "";       // set username to empty string
+      
+      while(username.equals("") || username == null || username.equals(" ")) //keep prompting
+      {                                                                      //   until valid
+         username = JOptionPane.showInputDialog(null, "What would you like your username to be?\n"
+                                                + "The length must be 10 characters or less");
+         
+         if(username.length() > 10)                                          //if the username is
+         {                                                                   //  longer than 10 chars
+            JOptionPane.showMessageDialog(null, "Username must be less than 10 characters",
+                                          "Username too long", JOptionPane.ERROR_MESSAGE);
+            username = "";
+         }
+         
+         if(username == null)                                                //if username == null
+            username = "";                                                   //set username to empty
+      }
+      
+      myUsername = username;      
+   }
+   
+   
+   public String getMyUsername()
+   //POST: FCTVAL == myUsername
+   {
+      return myUsername;
+   }
+
 	public ArrayList<User> getUsers() 
-   //PRE:
-   //POST:
+   //POST: FCTVAL == users
    {
 		return users;
 	}
@@ -165,6 +182,7 @@ public class Backend {
 			start();
 		}
 
+
 		@Override
 		public void run() 
       //PRE:
@@ -174,16 +192,23 @@ public class Backend {
 		}
 	}
 
+
 	public void scanRange(int min, int max) 
    //PRE:
    //POST:
    {
+      User u;     //
+      
+      
 		String[] myIPArr = me.getHost().split("\\.");
 		String prefix = myIPArr[0] + "." + myIPArr[1] + "." + myIPArr[2] + ".";
-		for(int subAddress = min; subAddress <= max; subAddress++) {
-			if(!me.getHost().equals(prefix + subAddress)) { // don't add yourself
-				User u = handshake(prefix + subAddress);
-				if(u != null) {
+		for(int subAddress = min; subAddress <= max; subAddress++) 
+      {
+			if(!me.getHost().equals(prefix + subAddress)) // don't add yourself
+         { 
+				u = handshake(prefix + subAddress);
+				if(u != null) 
+            {
 					System.out.println("Reply: " + u.getUsername() + "@" + u.getHost());
 					users.add(u);
 				}
@@ -191,16 +216,21 @@ public class Backend {
 		}
 	}
 
+
 	public User addStaticUser(String host) 
-   //PRE:
+   //PRE: host is a valid 
    //POST:
    {
-   		User u = handshake(host);
-   		if(u != null) {
+   		User u;     //
+         
+         u = handshake(host);
+   		if(u != null) 
+         {
    			users.add(u);
    		}
    		return u;
 	}
+
 
 	public void scanLAN(int split) 
    //PRE:
@@ -213,12 +243,14 @@ public class Backend {
 		}
 	}
 
+
 	private User handshake(String host) 
    //PRE:
    //POST:
    {
 		//System.out.println("handshake " + host);
-		try {
+		try 
+      {
 			Socket connection = new Socket();
 			connection.connect(new InetSocketAddress(host, PUBLIC_PORT), 1000);
 			OutputStream out = connection.getOutputStream();
@@ -248,7 +280,8 @@ public class Backend {
    //PRE:
    //POST:
    {
-		incomingListener = new Thread() {
+		incomingListener = new Thread() 
+      {
 			public void run() 
          //PRE:
          //POST:
@@ -258,7 +291,8 @@ public class Backend {
             {
 					openSocket = new ServerSocket(PUBLIC_PORT);
 				}
-				catch(Exception e) {
+				catch(Exception e) 
+            {
 					System.err.println("Cannot bind to port %d".format(""+PUBLIC_PORT));
 					System.exit(0);
 				}
@@ -281,6 +315,7 @@ public class Backend {
 		};
 	}
 
+
 	private void handelIncomingRequest(InputStream in, OutputStream out) 
    //PRE:
    //POST:
@@ -290,22 +325,24 @@ public class Backend {
 		char c;
 
 		try {
-			// read in header
-			while((c = (char) in.read()) != 0x0) 
+			while((c = (char) in.read()) != 0x0)      // read in header
          {
 				header += c;
 			}
-			if(header.equals(PROTOCOL_WHOIS)) 
+         
+			if(header.equals(PROTOCOL_WHOIS))         //
          {
 				out.write(me.getUsername().getBytes());
 				out.write(0x0);
 				out.flush();
 			}
+         
 			else if(header.indexOf(PROTOCOL_FROM + ":") != -1) 
          {
-				String[] parse = header.split(":");
-				// read message
-				while((c = (char) in.read()) != 0x0) 
+				String[] parse;                          // 
+            
+            parse = header.split(":");
+				while((c = (char) in.read()) != 0x0)     // read message 
             {
 					message += c;
 				}
@@ -322,55 +359,68 @@ public class Backend {
 		catch(Exception e) {}
 	}
 
+
 	private void messageNotify(String username, String message) 
    //PRE:
    //POST:
    {
       msgRcvd = true;
-      for(User u : users) {
-      	if(u.getUsername().equals(username)) {
-      		u.getChatPanel().msgReceived(message, username);
-      		return;
+      for(User u : users) 
+      {
+      	if(u.getUsername().equals(username))                  // if User's username == username
+         {
+      		u.getChatPanel().msgReceived(message, username);   // call msgReceived in ChatPanel to 
+      		return;                                            //    display the message
       	}
       }
-		System.out.println("@" + username + ": " + message);
+		System.out.println("@" + username + ": " + message); //////////////// REMOVE when complese
 	}
+
 
 	public boolean sendMessage(User user, String message) 
    //PRE:
    //POST:
    {
+      String header;          // header of the incoming packet
+      String m;               // 
+      Socket connection;      //
+      OutputStream out;       //
+      InputStream in;         //
+      
 		try 
       {
-			Socket connection = new Socket(user.getHost(), PUBLIC_PORT);
-			OutputStream out = connection.getOutputStream();
-			InputStream in = connection.getInputStream();
+			connection = new Socket(user.getHost(), PUBLIC_PORT);
+			out = connection.getOutputStream();
+			in = connection.getInputStream();
 
-			String m = PROTOCOL_FROM + ":" + me.getUsername();
+			m = PROTOCOL_FROM + ":" + me.getUsername();
 			out.write(m.getBytes());
 			out.write(0x0);
 			out.write(message.getBytes());
 			out.write(0x0);
 			out.flush();
-			String header = "";
+			header = "";
 			char c;
 
-			// read in header
-			while((c = (char) in.read()) != 0x0) 
+			while((c = (char) in.read()) != 0x0)   // read in header
          {
 				header += c;
 			}
-			if(header.equals(PROTOCOL_RECIEVED)) 
+         
+			if(header.equals(PROTOCOL_RECIEVED))   // if header == "GotIt", return true
          {
 				return true;
 			}
+         
 			out.close();
 			in.close();
 			connection.close();
 		}
+      
 		catch(Exception e) {}
-		return false;
+		return false;                            // else return false
 	}
+   
    
    public String getMyIP()
    //POST: FCTVAL == myIP

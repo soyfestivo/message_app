@@ -20,17 +20,18 @@ public class ChatPanel extends JApplet implements ActionListener
    private JScrollPane scrollMsg;   //scroll pane for msgPanel
 	private User user;               //other User that the current User is chatting with
    private User me;                 //this user's information
-   //private int numMsgs;             //number of messages in a conversation
    private JPanel msgPan;           //panel for all of the messages   
    private Backend backend;         //instance of Backend
    private String myUsername;       //current User's username   
    
    
    public ChatPanel(User u, Backend b, String uname)
-   //PRE:  
-   //POST: 
+   //PRE: u, b, uname are initialized
+   //POST: Sets backend = b, user = u, and myUsername = myUsername from Backend.
+   //      Creates a panel that stores all of the messages with User uname, a JTextArea for typing
+   //      a message to send to User uname, and a send button.
    {
-      JPanel mainPan;          //main panel for messages, message text field, and send button
+      JPanel mainPan;          //main panel for messages, area for sending messages, and send button
       
       JPanel sendPan;          //panel holding components for sending message
       JScrollPane scrollText;  //scroll pane for text area   
@@ -38,16 +39,16 @@ public class ChatPanel extends JApplet implements ActionListener
       backend = b;
       user = u;
       myUsername = backend.getMyUsername();
-      
+                                                      //panel for this entire JApplet
       mainPan = new JPanel();
       mainPan.setLayout(new BorderLayout());
       add(mainPan);
-     
+                                                      //set up panel the user interacts with
       sendPan = new JPanel();
       sendPan.setLayout(new BorderLayout());
       mainPan.add(sendPan, BorderLayout.SOUTH);
       
-                                                      //set up text to send
+                                                      //set up text area for sending messages
       msgField = new JTextArea(2, 25);
       scrollText = new JScrollPane(msgField);
       msgField.setLineWrap(true);
@@ -65,31 +66,23 @@ public class ChatPanel extends JApplet implements ActionListener
       msgPan.setLayout(new BoxLayout(msgPan, BoxLayout.PAGE_AXIS)); //from top to bottom
       scrollMsg = new JScrollPane(msgPan);                          //add scroll bar
       mainPan.add(scrollMsg, BorderLayout.CENTER);    
-      
-//////////////// for testing REMOVE when complete /////////////////      
-      /*for(int i = 0; i < 20; i++)
-      {
-        //pans[i] = new JPanel();
-        //pans[i].add(new JLabel("<html>testing " + i + " asldk<br>jfwoieslksldfwoiefj<br><br>dslkcnaliweraofsdvnwir92834urwe<br>fsdjfhasdfhsadjfkasjhdfas<br><br><br></html>"));
-        //pans[i].add(new JLabel("<html>users[0]<br>"blah blah blah blah"</html>);
-        msgPan.add(new Message("Hello, this is a test #" + i + "!", "soyfestivo")); 
-      }*/
-      
    }
-
+   
+                                                //actionPerformed for sendButton
    public void actionPerformed(ActionEvent e)
-    // POST: FCTVAL == executes the parseInput function, in the event that the button is pressed
+    // POST: In the event that sendButton is pressed, sendMessage function from backend is called;
+    //       this sends the message to User uname.
     {
       if(e.getSource() == sendButton)     // Will only execute if the button is pressed
       {
-         //numMsgs++;
          msgPan.add(new Message(msgField.getText(), myUsername)); 
          backend.sendMessage(user, msgField.getText());
          //parentClass.actionPerformed(this, parseInput());
-         msgField.setText("");
+         msgField.setText("");            //sets msgField to be blank after message has been sent
          afterMessage();
       }
    }
+   
    
    public void msgReceived(String message, String username)
    //PRE:  message and username are initialized
@@ -98,6 +91,7 @@ public class ChatPanel extends JApplet implements ActionListener
       msgPan.add(new Message(message, username));
       afterMessage();
    }
+   
    
    public void newMessage()
    //PRE:
@@ -110,15 +104,15 @@ public class ChatPanel extends JApplet implements ActionListener
       }
    }
    
+   
    private void afterMessage()
    //PRE:  msgPan and scrollMsg are initialized 
    //POST: a blank JLabel is added to msgPan, msgField text is set to empty, 
    //      the panel is revalidated, and the scollMsg is pushed on to the bottom
    {
-         //msgField.setText("");                                   //clear the text in msgField
          this.revalidate();                                      //refresh
          JScrollBar bar = scrollMsg.getVerticalScrollBar();      //move the scroll bar to the bottom
          bar.setValue(bar.getMaximum());
    }  
-
+   
 } //end class
