@@ -84,14 +84,15 @@ public class UserPanel extends JApplet implements ActionListener
 
       public void actionPerformed(ActionEvent e)
       {
+         String host;         //
 
-         if(e.getSource() == buttons.get(0))    // User selected add IP manually button
+         if(e.getSource() == buttons.get(0))           // User selected add IP manually button
          {
-            String host = addIP();              // Prompt user for IP
+            host = addIP();                            // Prompt user for IP
            
             staticUser = backend.addStaticUser(host);  // Add static user to list
 
-            users = backend.getUsers();         // Update this users list
+            users = backend.getUsers();                // Update this users list
          
             updatePanel();
 
@@ -103,6 +104,18 @@ public class UserPanel extends JApplet implements ActionListener
          {
            
             // TODO - Call scan for IP method from backend and updatePanel
+            
+            backend.scanLAN(256);
+            repaint();
+            
+            try
+            {
+               Thread.sleep(4000);
+            }
+            catch(InterruptedException ie) {}
+            
+            updatePanel();
+            mainPan.revalidate();
 
          }
 

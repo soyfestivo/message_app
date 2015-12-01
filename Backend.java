@@ -49,6 +49,8 @@ public class Backend
 		setupThread();
 		incomingListener.start();
 		users = new ArrayList<User>();
+      
+      setMyUsername();          //get the user's desired username
 
 		try 
       { 
@@ -60,8 +62,6 @@ public class Backend
              {
           	 	System.out.println("~  " + iiiiii.getLocalHost().getHostAddress());
           	 }
-
-          setMyUsername();          //get the user's desired username
           
           addresses = NetworkInterface.getNetworkInterfaces();
 
@@ -85,9 +85,9 @@ public class Backend
           me = new User(myUsername, myAddress.getHostAddress(), this);
 		}
 
-		catch(Exception e) 
+		catch(Exception ex) 
       {
-			System.err.println("Error Getting my own IP" + e.toString());
+			System.err.println("Error Getting my own IP" + ex.toString());
 			System.exit(0);
 		}
 
@@ -137,15 +137,17 @@ public class Backend
          username = JOptionPane.showInputDialog(null, "What would you like your username to be?\n"
                                                 + "The length must be 10 characters or less");
          
+         if(username == null)                                                //if username == null
+         {
+            username = "";                                                   //set username to empty
+         }
+         
          if(username.length() > 10)                                          //if the username is
          {                                                                   //  longer than 10 chars
             JOptionPane.showMessageDialog(null, "Username must be less than 10 characters",
                                           "Username too long", JOptionPane.ERROR_MESSAGE);
             username = "";
          }
-         
-         if(username == null)                                                //if username == null
-            username = "";                                                   //set username to empty
       }
       
       myUsername = username;      
@@ -368,8 +370,8 @@ public class Backend
       for(User u : users) 
       {
       	if(u.getUsername().equals(username))                  // if User's username == username
-         {
-      		u.getChatPanel().msgReceived(message, username);   // call msgReceived in ChatPanel to 
+         {         
+      		u.getChatPanel().msgReceived(message, username);   // call msgReceived in ChatPanel to                         
       		return;                                            //    display the message
       	}
       }
@@ -428,7 +430,7 @@ public class Backend
       return myIP;
    }
    
-   public boolean isMsgRcvd()
+ /*  public boolean isMsgRcvd()
    //POST: FCTVAL == msgRcvd
    {
       return msgRcvd;
@@ -445,5 +447,5 @@ public class Backend
    {
       msgRcvd = false;
       return inMessage;
-   }
+   }*/
 }

@@ -55,6 +55,15 @@ public class UIWindow extends JFrame
 		//pack();											          //force resize elements of UI
 		setVisible(true);								          //make UI visible
       
+      try                                              //give time to find users
+      {
+         Thread.sleep(4000);
+      }
+      catch(InterruptedException ie) {} 
+   
+      userPanel.updatePanel();                        //add buttons for online users
+      userPanel.revalidate();
+      
 	}
 
    public void changeToUser(User user) 

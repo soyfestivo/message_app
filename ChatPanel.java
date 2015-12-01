@@ -11,6 +11,7 @@ import java.awt.event.*;
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Color;
 import java.util.ArrayList;
 
 public class ChatPanel extends JApplet implements ActionListener
@@ -23,7 +24,7 @@ public class ChatPanel extends JApplet implements ActionListener
    private JPanel msgPan;           //panel for all of the messages   
    private Backend backend;         //instance of Backend
    private String myUsername;       //current User's username   
-   
+
    
    public ChatPanel(User u, Backend b, String uname)
    //PRE: u, b, uname are initialized
@@ -75,7 +76,7 @@ public class ChatPanel extends JApplet implements ActionListener
     {
       if(e.getSource() == sendButton)     // Will only execute if the button is pressed
       {
-         msgPan.add(new Message(msgField.getText(), myUsername)); 
+         msgPan.add(new Message(msgField.getText(), myUsername, Color.CYAN)); 
          backend.sendMessage(user, msgField.getText());
          //parentClass.actionPerformed(this, parseInput());
          msgField.setText("");            //sets msgField to be blank after message has been sent
@@ -88,12 +89,12 @@ public class ChatPanel extends JApplet implements ActionListener
    //PRE:  message and username are initialized
    //POST: adds a new Message to msgPan with the text message and username
    {
-      msgPan.add(new Message(message, username));
+      msgPan.add(new Message(message, username, Color.YELLOW));
       afterMessage();
    }
    
    
-   public void newMessage()
+/*   public void newMessage()
    //PRE:
    //POST: If a new message has been received, calls msgReceived which creates a new Message
    //      with the message and username
@@ -102,7 +103,7 @@ public class ChatPanel extends JApplet implements ActionListener
       {
          msgReceived(backend.getInUser(), backend.getInMessage());
       }
-   }
+   }*/
    
    
    private void afterMessage()
