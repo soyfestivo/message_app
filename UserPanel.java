@@ -35,7 +35,7 @@ public class UserPanel extends JApplet implements ActionListener
          mainPan.setLayout(new BoxLayout(mainPan, BoxLayout.PAGE_AXIS)); //from top to bottom
          add(mainPan);
 
-         myIP = new JLabel("IP: " + users.get(0).getHost());
+         myIP = new JLabel("My IP: " + users.get(0).getHost());
          mainPan.add(myIP);
 
                                                                         // initialize array of buttons
@@ -46,6 +46,8 @@ public class UserPanel extends JApplet implements ActionListener
          
          buttons.add(new JButton("Find online users"));
          mainPan.add(buttons.get(1));
+
+         mainPan.add(new JLabel("Users List:"));
         
          buttons.get(0).addActionListener(this);
          buttons.get(1).addActionListener(this);

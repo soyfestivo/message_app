@@ -12,6 +12,7 @@ import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 
 public class ChatPanel extends JApplet implements ActionListener
@@ -23,7 +24,9 @@ public class ChatPanel extends JApplet implements ActionListener
    private User me;                 //this user's information
    private JPanel msgPan;           //panel for all of the messages   
    private Backend backend;         //instance of Backend
-   private String myUsername;       //current User's username   
+   private String myUsername;       //current User's username  
+   private Color sentColor;         //color of sent message
+   private Color receiveColor;      //color of recieve message 
 
    
    public ChatPanel(User u, Backend b, String uname)
@@ -37,6 +40,9 @@ public class ChatPanel extends JApplet implements ActionListener
       JPanel sendPan;          //panel holding components for sending message
       JScrollPane scrollText;  //scroll pane for text area   
 
+      sentColor = new Color(207, 235, 244);
+      receiveColor = new Color(240, 240, 240);
+
       backend = b;
       user = u;
       myUsername = backend.getMyUsername();
@@ -44,6 +50,10 @@ public class ChatPanel extends JApplet implements ActionListener
       mainPan = new JPanel();
       mainPan.setLayout(new BorderLayout());
       add(mainPan);
+
+      JLabel threadTitle = new JLabel("Chat with @" + uname);
+      threadTitle.setFont(new Font(threadTitle.getName(), Font.BOLD, 20));
+      mainPan.add(threadTitle, BorderLayout.NORTH);
                                                       //set up panel the user interacts with
       sendPan = new JPanel();
       sendPan.setLayout(new BorderLayout());
@@ -76,7 +86,7 @@ public class ChatPanel extends JApplet implements ActionListener
     {
       if(e.getSource() == sendButton)     // Will only execute if the button is pressed
       {
-         msgPan.add(new Message(msgField.getText(), myUsername, Color.CYAN)); 
+         msgPan.add(new Message(msgField.getText(), myUsername, sentColor)); 
          backend.sendMessage(user, msgField.getText());
          //parentClass.actionPerformed(this, parseInput());
          msgField.setText("");            //sets msgField to be blank after message has been sent
@@ -89,7 +99,7 @@ public class ChatPanel extends JApplet implements ActionListener
    //PRE:  message and username are initialized
    //POST: adds a new Message to msgPan with the text message and username
    {
-      msgPan.add(new Message(message, username, Color.YELLOW));
+      msgPan.add(new Message(message, username, receiveColor));
       afterMessage();
    }
    

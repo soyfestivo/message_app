@@ -38,7 +38,7 @@ public class UIWindow extends JFrame
       height = 400;
 
 		setLayout(new BorderLayout());		      //set layout of frame to border layout
-		backend = new Backend();
+		backend = new Backend(this);
 
       myUsername = backend.getMyUsername();     // get the current user's username
 
@@ -48,7 +48,7 @@ public class UIWindow extends JFrame
 		chatPanel = users.get(0).getChatPanel();
       userPanel = new UserPanel(users, backend, this);
       chatPanel.msgReceived("You can send messages to yourself here or select one "
-                            + "of the users from the left", "yourself");
+                            + "of the users from the left", "chat_bot");
 
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	 //set "close" functionality to close frame

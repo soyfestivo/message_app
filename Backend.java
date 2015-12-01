@@ -24,6 +24,7 @@ public class Backend
 	private Thread incomingListener;                      //
    private String myIP;                                  //current User's IP address
    private String myUsername;                            //current User's username
+   private UIWindow window;                              // front end connection
    //private String inMessage;                             //incoming message
    //private String inUser;                                //User inMessage is from
    //private boolean msgRcvd;                              //a new incoming message has been received
@@ -35,7 +36,7 @@ public class Backend
 		new Backend();
 	}*/
    
-	public Backend() 
+	public Backend(UIWindow window) 
    //PRE:
    //POST:
    {  //
@@ -52,15 +53,18 @@ public class Backend
       
       setMyUsername();          //get the user's desired username
 
+      this.window = window;
+
 		try 
       { 
 
+      	////////////// testing for chris
       	n = InetAddress.getAllByName("google.com");
 
-      	System.out.println("Address: " + n.toString());
+      	//System.out.println("Address: " + n.toString());
           	 for(InetAddress iiiiii : n) 
              {
-          	 	System.out.println("~  " + iiiiii.getLocalHost().getHostAddress());
+          	 	//System.out.println("~  " + iiiiii.getLocalHost().getHostAddress());
           	 }
           
           addresses = NetworkInterface.getNetworkInterfaces();
@@ -70,13 +74,14 @@ public class Backend
           {
           	 e = ni.getInetAddresses();
           	 
-          	 System.out.println("Address: " + ni.toString());
+          	 //System.out.println("Address: " + ni.toString());
           	 while(e.hasMoreElements() && (ia = e.nextElement()) != null) 
              {
-          	 	System.out.println("  " + ia.getLocalHost().getHostAddress());
+          	 	//System.out.println("  " + ia.getLocalHost().getHostAddress());
           	 }
           	
           }
+          ////////////// testing for chris
           
 			 myAddress = InetAddress.getLocalHost();
           myIP = myAddress.getHostAddress();
@@ -215,12 +220,23 @@ public class Backend
 				if(u != null) 
             {
 					System.out.println("Reply: " + u.getUsername() + "@" + u.getHost());
-					users.add(u);
+					addUser(u);
 				}
 			}
 		}
 	}
 
+
+	private void addUser(User u) {
+		for(User user : users) {
+			if(user.getHost().equals(u.getHost())) {
+				users.remove(user);
+				users.add(u);
+				return;
+			}
+		}
+		users.add(u);
+	}
 
 	public User addStaticUser(String host) 
    //PRE: host is a valid 
@@ -231,7 +247,7 @@ public class Backend
          u = handshake(host);
    		if(u != null)     // If you can connect with u
          {
-   			users.add(u);  // Add them to users array
+   			addUser(u);  // Add them to users array
    		}
    		return u;
 	}
@@ -382,7 +398,8 @@ public class Backend
       {
       	if(u.getUsername().equals(username))                  // if User's username == username
          {         
-      		u.getChatPanel().msgReceived(message, username);   // call msgReceived in ChatPanel to                         
+      		u.getChatPanel().msgReceived(message, username);   // call msgReceived in ChatPanel to
+      		window.changeToUser(u);                       
       		return;                                            //    display the message
       	}
       }
