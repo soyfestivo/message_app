@@ -33,16 +33,15 @@ public class UserPanel extends JApplet implements ActionListener
 
          mainPan = new JPanel();
          mainPan.setLayout(new BoxLayout(mainPan, BoxLayout.PAGE_AXIS)); //from top to bottom
-         //mainPan.setLayout(new GridLayout(2,1));
          add(mainPan);
 
          myIP = new JLabel("IP: " + users.get(0).getHost());
          mainPan.add(myIP);
 
-         // initialize array of buttons
+                                                                        // initialize array of buttons
          buttons = new ArrayList<JButton>();
 
-         buttons.add(new JButton("Add an user by IP"));
+         buttons.add(new JButton("Add a user by IP"));
          mainPan.add(buttons.get(0));
          
          buttons.add(new JButton("Find online users"));
@@ -58,23 +57,22 @@ public class UserPanel extends JApplet implements ActionListener
       public void updatePanel()
       // POST: updates UserPanel with the correct number of user buttons
       {
-         // remove all old buttons prior to adding new ones
-         if (buttons != null)
+                                                // remove all old buttons prior to adding new ones
+         if (buttons != null)                   // if there are buttons
          {
-            while(buttons.size() > 2)
-            {
+            while(buttons.size() > 2)           // if there is more than the "Add a user by IP" and
+            {                                   //    "Find online users" buttons
                 mainPan.remove(buttons.get(buttons.size() - 1));
                 buttons.remove(buttons.size() - 1);
             }
          }
 
-         // iterate through each user
-         for (int i = 0; i < users.size(); i++)
+         for (int i = 0; i < users.size(); i++) // iterate through each user
          {
             int j = i + 2;
-            // add a button for each user action
-            if(users.get(i) != null)
-            {
+                                               // add a button for each user action
+            if(users.get(i) != null)           // if users isn't empty, add a button for each User
+            {           
                 buttons.add(new JButton(users.get(i).getUsername()));
                 mainPan.add(buttons.get(j));
                 buttons.get(j).addActionListener(this);
@@ -82,9 +80,10 @@ public class UserPanel extends JApplet implements ActionListener
          }
       }
 
+                                                       // Handles any button clicks
       public void actionPerformed(ActionEvent e)
       {
-         String host;         //
+         String host;         // User's IP
 
          if(e.getSource() == buttons.get(0))           // User selected add IP manually button
          {
@@ -101,32 +100,35 @@ public class UserPanel extends JApplet implements ActionListener
          }
 
          if(e.getSource() == buttons.get(1))    // User selected button to find online users
-         {
-           
-            // TODO - Call scan for IP method from backend and updatePanel
+         {  
+            int split;                          // Amount to split the group size into when
+                                                //    searching for Users
             
-            backend.scanLAN(256);
+            split = 16;
+         
+            backend.scanLAN(split);
             repaint();
             
-            try
+            try                                // Sleep for 4 seconds to give time to find users
             {
                Thread.sleep(4000);
             }
             catch(InterruptedException ie) {}
             
-            updatePanel();
+            updatePanel();                     // Update the panel with the buttons for all found Users
             mainPan.revalidate();
 
          }
 
-         if(e.getSource() instanceof JButton &&
-            e.getSource() != buttons.get(0)  &&
+         if(e.getSource() instanceof JButton &&     // If a button other than "Add a user by IP"
+            e.getSource() != buttons.get(0)  &&     //    or "Find online users" was clicked
             e.getSource() != buttons.get(1)  )
          {
-            users = backend.getUsers();         // Update this users list
+            users = backend.getUsers();            // Update this users list
 
-            for(int i = 0; i < users.size(); i++)
+            for(int i = 0; i < users.size(); i++)  // Loop through the users
             {
+                                                  // Find out which User the button is associated with
                 if( ((JButton)e.getSource()).getText().equals(users.get(i).getUsername()))
                 {
                     //Display chat info in chatPanel
@@ -141,6 +143,7 @@ public class UserPanel extends JApplet implements ActionListener
          }
 
       }
+      
 
       private String addIP()
       //POST: FCTVAL == host string

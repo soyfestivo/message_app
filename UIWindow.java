@@ -29,23 +29,26 @@ public class UIWindow extends JFrame
 	//PRE:  title is initialized
 	//POST: new UIWindow created
 	{
-		super(title);						      //call constructor of superclass 
+		super(title);						//call constructor of superclass 
       
-      int width = 600;                    //width of the frame
-      int height = 400;                   //height of the frame
+      int width;                    //width of the frame
+      int height;                   //height of the frame
       
+      width = 600;
+      height = 400;
 
-		setLayout(new BorderLayout());		//set layout of frame to border layout
+		setLayout(new BorderLayout());		      //set layout of frame to border layout
 		backend = new Backend();
 
-      myUsername = backend.getMyUsername();
+      myUsername = backend.getMyUsername();     // get the current user's username
 
 		backend.addStaticUser(backend.getMyIP()); // add current User
 		users = backend.getUsers();
 
 		chatPanel = users.get(0).getChatPanel();
       userPanel = new UserPanel(users, backend, this);
-      chatPanel.msgReceived("You can send messages to yourself here or select one of the users from the left", "yourself");
+      chatPanel.msgReceived("You can send messages to yourself here or select one "
+                            + "of the users from the left", "yourself");
 
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	 //set "close" functionality to close frame
@@ -66,42 +69,18 @@ public class UIWindow extends JFrame
       
 	}
 
+
    public void changeToUser(User user) 
-   // PRE: user is valid
+   //PRE: user is a valid User
    //POST: will change the ChatPanel to the new user's chatPanel
    {
-      remove(chatPanel);
-      add(user.getChatPanel(), BorderLayout.CENTER);
+      remove(chatPanel);                              //remove current ChatPanel
+      add(user.getChatPanel(), BorderLayout.CENTER);  //add the new ChatPanel
       chatPanel = user.getChatPanel();
       revalidate();
    }
 
-
-/*   private void setMyUsername()
-   //PRE:  myUsername is delcared
-   //POST: sets myUsername to user's chosen username
-   {
-      String username = "";
-      
-      while(username.equals("") || username == null || username.equals(" ")) //keep prompting
-      {                                                                      //   until valid
-         username = JOptionPane.showInputDialog(null, "What would you like your username to be?");
-         
-         if(username == null)
-            username = "";
-      }
-      myUsername = username;      
-      //return username;
-   }
-   
-   public String getMyUsername()
-   //PRE:  myUsername is non-blank and not null
-   //POST: FCTVAL == myUsername
-   {
-      return myUsername;
-   } */
-
-
+                                          //Creates a new instance of UIWindow
    public static void main(String[] args) 
    {
 		new UIWindow("CS 342 Final Project, Messaging app");

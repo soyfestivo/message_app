@@ -24,9 +24,9 @@ public class Backend
 	private Thread incomingListener;                      //
    private String myIP;                                  //current User's IP address
    private String myUsername;                            //current User's username
-   private String inMessage;                             //incoming message
-   private String inUser;                                //User inMessage is from
-   private boolean msgRcvd;                              //a new incoming message has been received
+   //private String inMessage;                             //incoming message
+   //private String inUser;                                //User inMessage is from
+   //private boolean msgRcvd;                              //a new incoming message has been received
 
 
 	/*public static void main(String[] args) {
@@ -39,12 +39,12 @@ public class Backend
    //PRE:
    //POST:
    {  //
-      InetAddress[] n;              //
-      Enumeration<NetworkInterface> addresses;   
-      NetworkInterface ni;
-      Enumeration<InetAddress> e;
-      InetAddress ia;
-      InetAddress myAddress;
+      InetAddress[] n;                          //
+      Enumeration<NetworkInterface> addresses;  // 
+      NetworkInterface ni;                      //
+      Enumeration<InetAddress> e;               //
+      InetAddress ia;                           //
+      InetAddress myAddress;                    //
    
 		setupThread();
 		incomingListener.start();
@@ -65,7 +65,8 @@ public class Backend
           
           addresses = NetworkInterface.getNetworkInterfaces();
 
-          while(addresses.hasMoreElements() && (ni = addresses.nextElement()) != null) 
+          while(addresses.hasMoreElements()                 // get the addresses
+               && (ni = addresses.nextElement()) != null) 
           {
           	 e = ni.getInetAddresses();
           	 
@@ -92,7 +93,6 @@ public class Backend
 		}
 
 		scanLAN(16);
-		//sendMessage(new User("soyfestivo", "192.168.0.111"), "Hello OMG so cool it worked!!!");
 
 		
 		/*Thread console = new Thread() {
@@ -128,7 +128,7 @@ public class Backend
    //PRE:  myUsername is delcared
    //POST: sets myUsername to user's chosen username
    {
-      String username;     // String representation of the current user
+      String username;     // String representation of the current User
       
       username = "";       // set username to empty string
       
@@ -160,18 +160,20 @@ public class Backend
       return myUsername;
    }
 
+
 	public ArrayList<User> getUsers() 
    //POST: FCTVAL == users
    {
 		return users;
 	}
 
+
    //Description: 
 	private class MiniScan extends Thread 
    {
-		private int id;
-		private int min;
-		private int max;
+		private int id;      //
+		private int min;     //
+		private int max;     //
 
 		public MiniScan(int min, int max) 
       //PRE:
@@ -199,11 +201,12 @@ public class Backend
    //PRE:
    //POST:
    {
-      User u;     //
+      User u;            // User the current user is trying to connect with
+      String[] myIPArr;  //
+      String prefix;     //   
       
-      
-		String[] myIPArr = me.getHost().split("\\.");
-		String prefix = myIPArr[0] + "." + myIPArr[1] + "." + myIPArr[2] + ".";
+		myIPArr = me.getHost().split("\\.");
+		prefix = myIPArr[0] + "." + myIPArr[1] + "." + myIPArr[2] + ".";
 		for(int subAddress = min; subAddress <= max; subAddress++) 
       {
 			if(!me.getHost().equals(prefix + subAddress)) // don't add yourself
@@ -221,14 +224,14 @@ public class Backend
 
 	public User addStaticUser(String host) 
    //PRE: host is a valid 
-   //POST:
+   //POST: FCTVAL == u; the User you are connecting with
    {
-   		User u;     //
+   		User u;     // User the current user is trying to connect with
          
          u = handshake(host);
-   		if(u != null) 
+   		if(u != null)     // If you can connect with u
          {
-   			users.add(u);
+   			users.add(u);  // Add them to users array
    		}
    		return u;
 	}
@@ -238,7 +241,9 @@ public class Backend
    //PRE:
    //POST:
    {
-		int groupSize = 256 / split;
+		int groupSize;    // 
+      
+      groupSize = 256 / split;
 		for(int i = 0; i < split; i++) 
         {
 			new MiniScan(groupSize * i, (groupSize * i) + groupSize - 1);
@@ -250,6 +255,9 @@ public class Backend
    //PRE:
    //POST:
    {
+      String username;
+      char c;
+   
 		//System.out.println("handshake " + host);
 		try 
       {
@@ -261,11 +269,9 @@ public class Backend
 			out.write(PROTOCOL_WHOIS.getBytes());
 			out.write(0x0);
 			out.flush();
-			String username = "";
-			char c;
+			username = "";
 
-			// read response
-			while((c = (char) in.read()) != 0x0) 
+			while((c = (char) in.read()) != 0x0)  // read response
          {
 				username += c;
 			}
@@ -288,7 +294,12 @@ public class Backend
          //PRE:
          //POST:
          {
-				ServerSocket openSocket = null;
+            ServerSocket openSocket;   //
+            Socket connection;         //
+            InputStream in;            //
+            OutputStream out;          //
+         
+				openSocket = null;
 				try 
             {
 					openSocket = new ServerSocket(PUBLIC_PORT);
@@ -303,9 +314,9 @@ public class Backend
             {
 					try 
                {
-						Socket connection = openSocket.accept();
-						InputStream in = connection.getInputStream();
-						OutputStream out = connection.getOutputStream();
+						connection = openSocket.accept();
+						in = connection.getInputStream();
+						out = connection.getOutputStream();
 						handelIncomingRequest(in, out);
 						in.close();
 						out.close();
@@ -349,8 +360,8 @@ public class Backend
 					message += c;
 				}
             
-            inUser = parse[1];
-            inMessage = message;
+            //inUser = parse[1];
+            //inMessage = message;
             
 				messageNotify(parse[1], message);
 				out.write(PROTOCOL_RECIEVED.getBytes());
@@ -366,7 +377,7 @@ public class Backend
    //PRE:
    //POST:
    {
-      msgRcvd = true;
+      //msgRcvd = true;
       for(User u : users) 
       {
       	if(u.getUsername().equals(username))                  // if User's username == username

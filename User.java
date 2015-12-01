@@ -8,7 +8,7 @@ public class User
 {
 	private String username;               //identifier for this User
 	private String host;                   //this User's IP address
-    private ChatPanel myPanel;             //instance of ChatPanel for this User
+   private ChatPanel myPanel;             //instance of ChatPanel for this User
 
 	public User(String username, String host, Backend backendInstance) 
    //PRE: username and host are initialized
