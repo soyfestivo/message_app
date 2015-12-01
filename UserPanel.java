@@ -157,19 +157,11 @@ public class UserPanel extends JApplet implements ActionListener
       //POST: FCTVAL == host string
       {  
          String host;     // IP address from user
-             
-         host = ""; 
     
-         // TODO - Could add regular expresion here to verify input is valid
+         // TODO - Could add regular expresion here to verify input is valid   
 
-         while(host.equals("") || host == null || host.equals(" ")) // keep prompting
-         {                                                                  
-             host = JOptionPane.showInputDialog(null, "Please enter an IP addres"
+         host = JOptionPane.showInputDialog(null, "Please enter an IP address"
                                                    + " (ie. 192.168.0.111).");
-             if(host == null)
-                host = ""; 
-         }   
-
          return host;
       }   
 }

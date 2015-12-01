@@ -60,7 +60,7 @@ public class ChatPanel extends JApplet implements ActionListener
       mainPan.add(sendPan, BorderLayout.SOUTH);
       
                                                       //set up text area for sending messages
-      msgField = new JTextArea(2, 25);
+      msgField = new JTextArea(4, 25);
       scrollText = new JScrollPane(msgField);
       msgField.setLineWrap(true);
       msgField.setWrapStyleWord(true);
@@ -88,8 +88,8 @@ public class ChatPanel extends JApplet implements ActionListener
       {
          msgPan.add(new Message(msgField.getText(), myUsername, sentColor)); 
          backend.sendMessage(user, msgField.getText());
-         //parentClass.actionPerformed(this, parseInput());
          msgField.setText("");            //sets msgField to be blank after message has been sent
+         msgField.requestFocus();         //puts the cursor in msgField
          afterMessage();
       }
    }

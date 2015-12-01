@@ -25,16 +25,7 @@ public class Backend
    private String myIP;                                  //current User's IP address
    private String myUsername;                            //current User's username
    private UIWindow window;                              // front end connection
-   //private String inMessage;                             //incoming message
-   //private String inUser;                                //User inMessage is from
-   //private boolean msgRcvd;                              //a new incoming message has been received
 
-
-	/*public static void main(String[] args) {
-   //PRE:
-   //POST:
-		new Backend();
-	}*/
    
 	public Backend(UIWindow window) 
    //PRE:
@@ -45,7 +36,7 @@ public class Backend
       NetworkInterface ni;                      //
       Enumeration<InetAddress> e;               //
       InetAddress ia;                           //
-      InetAddress myAddress;                    //
+      InetAddress myAddress;                    //Current user's IP address
    
 		setupThread();
 		incomingListener.start();
@@ -140,7 +131,7 @@ public class Backend
       while(username.equals("") || username == null || username.equals(" ")) //keep prompting
       {                                                                      //   until valid
          username = JOptionPane.showInputDialog(null, "What would you like your username to be?\n"
-                                                + "The length must be 10 characters or less");
+                                                + "The length must be 10 characters or less.");
          
          if(username == null)                                                //if username == null
          {
@@ -149,7 +140,7 @@ public class Backend
          
          if(username.length() > 10)                                          //if the username is
          {                                                                   //  longer than 10 chars
-            JOptionPane.showMessageDialog(null, "Username must be less than 10 characters",
+            JOptionPane.showMessageDialog(null, "Username must be less than 10 characters.",
                                           "Username too long", JOptionPane.ERROR_MESSAGE);
             username = "";
          }
@@ -366,7 +357,7 @@ public class Backend
 				out.flush();
 			}
          
-			else if(header.indexOf(PROTOCOL_FROM + ":") != -1) 
+			else if(header.indexOf(PROTOCOL_FROM + ":") != -1)   //
          {
 				String[] parse;                          // 
             
@@ -375,9 +366,6 @@ public class Backend
             {
 					message += c;
 				}
-            
-            //inUser = parse[1];
-            //inMessage = message;
             
 				messageNotify(parse[1], message);
 				out.write(PROTOCOL_RECIEVED.getBytes());
@@ -393,14 +381,13 @@ public class Backend
    //PRE:
    //POST:
    {
-      //msgRcvd = true;
       for(User u : users) 
       {
       	if(u.getUsername().equals(username))                  // if User's username == username
          {         
       		u.getChatPanel().msgReceived(message, username);   // call msgReceived in ChatPanel to
       		window.changeToUser(u);                       
-      		return;                                            //    display the message
+      		return;                                            // display the message in ChatPanel
       	}
       }
 		System.out.println("@" + username + ": " + message); //////////////// REMOVE when complese
@@ -416,6 +403,7 @@ public class Backend
       Socket connection;      //
       OutputStream out;       //
       InputStream in;         //
+      char c;                 //used for parsing the header
       
 		try 
       {
@@ -430,7 +418,6 @@ public class Backend
 			out.write(0x0);
 			out.flush();
 			header = "";
-			char c;
 
 			while((c = (char) in.read()) != 0x0)   // read in header
          {
@@ -457,23 +444,4 @@ public class Backend
    {
       return myIP;
    }
-   
- /*  public boolean isMsgRcvd()
-   //POST: FCTVAL == msgRcvd
-   {
-      return msgRcvd;
-   }
-   
-   public String getInUser()
-   //POST: FCTVAL == inUser
-   {
-      return inUser;
-   }
-   
-   public String getInMessage()
-   //POST: FCTVAL == inMessage
-   {
-      msgRcvd = false;
-      return inMessage;
-   }*/
 }
