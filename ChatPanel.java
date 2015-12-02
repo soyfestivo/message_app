@@ -61,7 +61,7 @@ public class ChatPanel extends JApplet implements ActionListener
       mainPan.add(sendPan, BorderLayout.SOUTH);
       
                                                       //set up text area for sending messages
-      msgField = new JTextArea(2, 25);
+      msgField = new JTextArea(4, 25);
       scrollText = new JScrollPane(msgField);
       msgField.setLineWrap(true);
       msgField.setWrapStyleWord(true);
@@ -91,6 +91,7 @@ public class ChatPanel extends JApplet implements ActionListener
          backend.sendMessage(user, msgField.getText());
          
          msgField.setText("");            //sets msgField to be blank after message has been sent
+         msgField.requestFocus();         //puts the cursor in msgField
          afterMessage();
       }
    }
