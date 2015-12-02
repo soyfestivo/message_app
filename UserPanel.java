@@ -1,8 +1,8 @@
 // Programmers:  Stephen Selke, Chris Griffith, Karen Bykowski
 // Assignment:   Project 4 - Messenger App
 // Date:         December 3, 2015
-// Description:  
-//        
+// Description:  This class models the WEST panel of the GUI
+//               which holds a list of buttons for each user
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -22,8 +22,8 @@ public class UserPanel extends JApplet implements ActionListener
       private int numUsers;                //total number of users online
 
       public UserPanel(ArrayList<User> u, Backend b, UIWindow window)
-      //PRE:
-      //POST:
+      //PRE:  each user u, backend b and window is initialized 
+      //POST: a jpanel is created and is added to the GUI
       {
          JLabel myIP;                      //lable at top of panel for ip
 
@@ -38,7 +38,7 @@ public class UserPanel extends JApplet implements ActionListener
          myIP = new JLabel("My IP: " + users.get(0).getHost());
          mainPan.add(myIP);
 
-                                                                        // initialize array of buttons
+         // initialize array of buttons
          buttons = new ArrayList<JButton>();
 
          buttons.add(new JButton("Add a user by IP"));
@@ -67,6 +67,8 @@ public class UserPanel extends JApplet implements ActionListener
                 mainPan.remove(buttons.get(buttons.size() - 1));
                 buttons.remove(buttons.size() - 1);
             }
+
+            mainPan.revalidate();
          }
 
          for (int i = 0; i < users.size(); i++) // iterate through each user
@@ -123,7 +125,7 @@ public class UserPanel extends JApplet implements ActionListener
             }
             catch(InterruptedException ie) {}
             
-            updatePanel();                     // Update the panel with the buttons for all found Users
+            updatePanel();                // Update the panel with the buttons for all found Users
             mainPan.revalidate();
 
          }
@@ -136,20 +138,14 @@ public class UserPanel extends JApplet implements ActionListener
 
             for(int i = 0; i < users.size(); i++)  // Loop through the users
             {
-                                                  // Find out which User the button is associated with
+                // Find out which User the button is associated with
                 if( ((JButton)e.getSource()).getText().equals(users.get(i).getUsername()))
                 {
-                    //Display chat info in chatPanel
-                    // pass username and ip to chat panel method that will display a message panel
-                  //System.out.println("clicked:" + users.get(i).getUsername());
+                    // change message panel to the selected user
                     window.changeToUser(users.get(i));
-                    //user.get(i).getChatPanel();
-            
                 }
             }
-
          }
-
       }
       
 
@@ -160,14 +156,17 @@ public class UserPanel extends JApplet implements ActionListener
              
          host = ""; 
     
-         // TODO - Could add regular expresion here to verify input is valid
+         boolean cancel = false;
 
-         while(host.equals("") || host == null || host.equals(" ")) // keep prompting
+         while((host.equals("") || host.equals(" ")) && !cancel) // keep prompting
          {                                                                  
-             host = JOptionPane.showInputDialog(null, "Please enter an IP addres"
+             host = JOptionPane.showInputDialog(null, "Please enter an IP address"
                                                    + " (ie. 192.168.0.111).");
-             if(host == null)
-                host = ""; 
+             if(host == null)   // Cancel button was selected
+             {
+                cancel = true;
+                host = "";
+             }
          }   
 
          return host;

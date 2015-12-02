@@ -1,8 +1,9 @@
 // Programmers:  Stephen Selke, Chris Griffith, Karen Bykowski
 // Assignment:   Project 4 - Messenger App
 // Date:         December 3, 2015
-// Description:  
-//        
+// Description:  This class models the CENTER panel of the GUI
+//               and holds the text output from sending/receiving
+//               messages
 
 import java.util.ArrayList;
 import java.awt.Graphics;
@@ -20,7 +21,7 @@ public class ChatPanel extends JApplet implements ActionListener
    private JButton sendButton;      //button to send message
    private JTextArea msgField;      //text area for user to enter message to send
    private JScrollPane scrollMsg;   //scroll pane for msgPanel
-	private User user;               //other User that the current User is chatting with
+   private User user;               //other User that the current User is chatting with
    private User me;                 //this user's information
    private JPanel msgPan;           //panel for all of the messages   
    private Backend backend;         //instance of Backend
@@ -79,7 +80,7 @@ public class ChatPanel extends JApplet implements ActionListener
       mainPan.add(scrollMsg, BorderLayout.CENTER);    
    }
    
-                                                //actionPerformed for sendButton
+                                                     //actionPerformed for sendButton
    public void actionPerformed(ActionEvent e)
     // POST: In the event that sendButton is pressed, sendMessage function from backend is called;
     //       this sends the message to User uname.
@@ -88,7 +89,7 @@ public class ChatPanel extends JApplet implements ActionListener
       {
          msgPan.add(new Message(msgField.getText(), myUsername, sentColor)); 
          backend.sendMessage(user, msgField.getText());
-         //parentClass.actionPerformed(this, parseInput());
+         
          msgField.setText("");            //sets msgField to be blank after message has been sent
          afterMessage();
       }
@@ -102,19 +103,6 @@ public class ChatPanel extends JApplet implements ActionListener
       msgPan.add(new Message(message, username, receiveColor));
       afterMessage();
    }
-   
-   
-/*   public void newMessage()
-   //PRE:
-   //POST: If a new message has been received, calls msgReceived which creates a new Message
-   //      with the message and username
-   {
-      if(backend.isMsgRcvd())             //if a new message has been received
-      {
-         msgReceived(backend.getInUser(), backend.getInMessage());
-      }
-   }*/
-   
    
    private void afterMessage()
    //PRE:  msgPan and scrollMsg are initialized 

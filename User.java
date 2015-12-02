@@ -2,26 +2,25 @@
 // Assignment:   Project 4 - Messenger App
 // Date:         December 3, 2015
 // Description:  Contains all the information for each person running the application
-//        
 
 public class User 
 {
 	private String username;               //identifier for this User
 	private String host;                   //this User's IP address
-   private ChatPanel myPanel;             //instance of ChatPanel for this User
+    private ChatPanel myPanel;             //instance of ChatPanel for this User
 
 	public User(String username, String host, Backend backendInstance) 
-   //PRE: username and host are initialized
-   //POST: sets username as username and host as host
-   {
+    //PRE: username and host are initialized
+    //POST: sets username as username and host as host
+    {
 		this.username = username;
 		this.host = host;
 		myPanel = new ChatPanel(this, backendInstance, username);
 	}
 
 	public String getUsername() 
-   //POST: FCTVAL == username
-   {
+    //POST: FCTVAL == username
+    {
 		return username;
 	}
 
@@ -32,8 +31,8 @@ public class User
 	}
 
 	public String getHost() 
-   //POST: FCTVAL == host
-   {
+    //POST: FCTVAL == host
+    {
 		return host;
 	}
 }
