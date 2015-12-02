@@ -21,17 +21,15 @@ public class Backend
 	private User me;                                      //current User
 	private ArrayList<User> users;                        //list of all people current User can chat with
 	private Thread incomingListener;                      //thread for listening
-    private String myIP;                                  //current User's IP address
-    private String myUsername;                            //current User's username
-    private UIWindow window;                              // front end connection
-    //private String inMessage;                             //incoming message
-    //private String inUser;                                //User inMessage is from
-    //private boolean msgRcvd;                              //a new incoming message has been received
+   private String myIP;                                  //current User's IP address
+   private String myUsername;                            //current User's username
+   private UIWindow window;                              // front end connection
+
 
 	public Backend(UIWindow window) 
-    //PRE:  window is initialized
-    //POST: constructs an instance of the backend class 
-    {  
+   //PRE:  window is initialized
+   //POST: constructs an instance of the backend class 
+   {  ////
       InetAddress[] n;                          // 
       Enumeration<NetworkInterface> addresses;  // 
       NetworkInterface ni;                      //
@@ -39,32 +37,32 @@ public class Backend
       InetAddress ia;                           //
       InetAddress myAddress;                    //Current user's IP address
    
-	  setupThread();
-	  incomingListener.start();
-	  users = new ArrayList<User>();
+      setupThread();
+      incomingListener.start();
+      users = new ArrayList<User>();
       
       setMyUsername();          //get the user's desired username
 
       this.window = window;
 
-	  try 
+      try 
       { 
 
       	////////////// testing for chris
-      	n = InetAddress.getAllByName("google.com");
+         n = InetAddress.getAllByName("google.com");
 
       	//System.out.println("Address: " + n.toString());
-        for(InetAddress iiiiii : n) 
-        {
+         for(InetAddress iiiiii : n) 
+         {
           	 	//System.out.println("~  " + iiiiii.getLocalHost().getHostAddress());
-        }
+         }
           
-        addresses = NetworkInterface.getNetworkInterfaces();
+         addresses = NetworkInterface.getNetworkInterfaces();
 
-        while(addresses.hasMoreElements()                 // get the addresses
+         while(addresses.hasMoreElements()                 // get the addresses
               && (ni = addresses.nextElement()) != null) 
-        {
-          	 e = ni.getInetAddresses();
+         {
+            e = ni.getInetAddresses();
           	 
           	 //System.out.println("Address: " + ni.toString());
           	 while(e.hasMoreElements() && (ia = e.nextElement()) != null) 
@@ -72,25 +70,25 @@ public class Backend
           	 	//System.out.println("  " + ia.getLocalHost().getHostAddress());
           	 }
           	
-        }
+         }
         ////////////// testing for chris
           
-	    myAddress = InetAddress.getLocalHost();
-        myIP = myAddress.getHostAddress();
+         myAddress = InetAddress.getLocalHost();
+         myIP = myAddress.getHostAddress();
 			
         //System.out.println("My address: " + myAddress.getHostAddress());
         System.out.println("My address: " + myIP);   /////////////////////REMOVE when complete; for debugging
 	    //me = new User("soyfestivo", myAddress.getHostAddress());
           
-        me = new User(myUsername, myAddress.getHostAddress(), this);
-	  }
+         me = new User(myUsername, myAddress.getHostAddress(), this);
+      }
       catch(Exception ex) 
       {
-		System.err.println("Error Getting my own IP" + ex.toString());
-		System.exit(0);
-	  }
+         System.err.println("Error Getting my own IP" + ex.toString());
+         System.exit(0);
+      }
 
-	  scanLAN(16);
+      scanLAN(16);
 
 		/*Thread console = new Thread() {
 			public void run() {
@@ -213,13 +211,13 @@ public class Backend
 	}
 
 	private void addUser(User u) 
-    //PRE:
-    //POST:
-    {
+   //PRE:
+   //POST:
+   {
 		for(User user : users) 
-        {
+      {
 			if(user.getHost().equals(u.getHost())) 
-            {
+         {
 				users.remove(user);
 				users.add(u);
 				return;
@@ -229,99 +227,101 @@ public class Backend
 	}
 
 	public User addStaticUser(String host) 
-    //PRE: host is a valid 
-    //POST: FCTVAL == u; the User you are connecting with
-    {
-   		User u;     // User the current user is trying to connect with
+   //PRE: host is a valid 
+   //POST: FCTVAL == u; the User you are connecting with
+   {
+      User u;     // User the current user is trying to connect with
          
-         u = handshake(host);
-   		if(u != null)     // If you can connect with u
-        {
-   			addUser(u);  // Add them to users array
-   		}
-   		return u;
-	}
+      u = handshake(host);
+      if(u != null)     // If you can connect with u
+      {
+         addUser(u);  // Add them to users array
+      }
+      return u;
+   }
 
 
 	public void scanLAN(int split) 
-    //PRE:
-    //POST:
-    {
-		int groupSize;    // 
+   //PRE:
+   //POST:
+   {
+      int groupSize;    // 
       
-        groupSize = 256 / split;
+      groupSize = 256 / split;
 
-		for(int i = 0; i < split; i++) 
-        {
-			new MiniScan(groupSize * i, (groupSize * i) + groupSize - 1);
-		}
-	}
+      for(int i = 0; i < split; i++) 
+      {
+         new MiniScan(groupSize * i, (groupSize * i) + groupSize - 1);
+      }
+   }
 
 
 	private User handshake(String host) 
-    //PRE:
-    //POST:
-    {
+   //PRE:
+   //POST:
+   {
       String username;
       char c;
    
 		//System.out.println("handshake " + host);
-	     try 
+      try 
+      {
+         Socket connection = new Socket();
+         connection.connect(new InetSocketAddress(host, PUBLIC_PORT), 1000);
+         OutputStream out = connection.getOutputStream();
+         InputStream in = connection.getInputStream();
+
+         out.write(PROTOCOL_WHOIS.getBytes());
+         out.write(0x0);
+         out.flush();
+         username = "";
+
+         while((c = (char) in.read()) != 0x0)  // read response
          {
-			Socket connection = new Socket();
-			connection.connect(new InetSocketAddress(host, PUBLIC_PORT), 1000);
-			OutputStream out = connection.getOutputStream();
-			InputStream in = connection.getInputStream();
+            username += c;
+         }
 
-			out.write(PROTOCOL_WHOIS.getBytes());
-			out.write(0x0);
-			out.flush();
-			username = "";
-
-			while((c = (char) in.read()) != 0x0)  // read response
-            {
-				username += c;
-			}
-			out.close();
+         out.close();
 			in.close();
 			connection.close();
 			return new User(username, host, this);
-		}
+      }
 		catch(Exception e) {}
 		return null;
 	}
 
 	private void setupThread() 
-    //PRE:
-    //POST:
-    {
-		incomingListener = new Thread() 
-        {
-			public void run() 
-            //PRE:
-            //POST:
-            {
-                ServerSocket openSocket;   //
-                Socket connection;         //
-                InputStream in;            //
-                OutputStream out;          //
+   //PRE:
+   //POST:
+   {
+      incomingListener = new Thread() 
+      {
+   		public void run() 
+         //PRE:
+         //POST:
+         {
+            ServerSocket openSocket;   //
+            Socket connection;         //
+            InputStream in;            //
+            OutputStream out;          //
          
 				openSocket = null;
 				try 
-                {
+            {
 					openSocket = new ServerSocket(PUBLIC_PORT);
 				}
-				catch(Exception e) 
-                {
+	
+   			catch(Exception e) 
+            {
 					System.err.println("Cannot bind to port %d".format(""+PUBLIC_PORT));
 					System.exit(0);
 				}
 
 				while(true) 
-                {
-					try 
-                    {
-						connection = openSocket.accept();
+            {
+				   try 
+               {
+				   	connection = openSocket.accept();
 						in = connection.getInputStream();
 						out = connection.getOutputStream();
 						handelIncomingRequest(in, out);
@@ -337,34 +337,34 @@ public class Backend
 
 
 	private void handelIncomingRequest(InputStream in, OutputStream out) 
-    //PRE:
-    //POST:
-    {
-		String header = "";
+   //PRE:
+   //POST:
+   {
+      String header = "";
 		String message = "";
 		char c;
 
 		try 
-        {
+      {
 			while((c = (char) in.read()) != 0x0)      // read in header
-            {
-				header += c;
+         {
+		   	header += c;
 			}
          
 			if(header.equals(PROTOCOL_WHOIS))         //
-            {
+         {
 				out.write(me.getUsername().getBytes());
 				out.write(0x0);
 				out.flush();
 			}
          
 			else if(header.indexOf(PROTOCOL_FROM + ":") != -1) 
-            {
+         {
 				String[] parse;                          // 
             
-                parse = header.split(":");
+            parse = header.split(":");
 				while((c = (char) in.read()) != 0x0)     // read message 
-                {
+            {
 					message += c;
 				}
             
@@ -379,13 +379,13 @@ public class Backend
 
 
 	private void messageNotify(String username, String message) 
-    //PRE:
-    //POST:
-    {
+   //PRE:
+   //POST:
+   {
       for(User u : users) 
       {
-      	if(u.getUsername().equals(username))                  // if User's username == username
-        {         
+        	if(u.getUsername().equals(username))                  // if User's username == username
+         {         
       		u.getChatPanel().msgReceived(message, username);   // call msgReceived in ChatPanel to
       		window.changeToUser(u);                       
       		return;                                            // display the message in ChatPanel
@@ -396,9 +396,9 @@ public class Backend
 
 
 	public boolean sendMessage(User user, String message) 
-    //PRE:
-    //POST:
-    {
+   //PRE:
+   //POST:
+   {
       String header;          // header of the incoming packet
       String m;               // 
       Socket connection;      //
@@ -407,8 +407,8 @@ public class Backend
       char c;                 //used for parsing the header
       
 		try 
-        {
-			connection = new Socket(user.getHost(), PUBLIC_PORT);
+      {
+		   connection = new Socket(user.getHost(), PUBLIC_PORT);
 			out = connection.getOutputStream();
 			in = connection.getInputStream();
 
@@ -421,18 +421,18 @@ public class Backend
 			header = "";
 
 			while((c = (char) in.read()) != 0x0)   // read in header
-            {
+         {
 				header += c;
 			}
          
 			if(header.equals(PROTOCOL_RECIEVED))   // if header == "GotIt", return true
-            {
+         {
 				return true;
 			}
          
 			out.close();
 			in.close();
-			connection.close();
+         connection.close();
 		}
       
 		catch(Exception e) {}

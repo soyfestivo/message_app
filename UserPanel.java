@@ -38,7 +38,7 @@ public class UserPanel extends JApplet implements ActionListener
          myIP = new JLabel("My IP: " + users.get(0).getHost());
          mainPan.add(myIP);
 
-         // initialize array of buttons
+                                                                       // initialize array of buttons
          buttons = new ArrayList<JButton>();
 
          buttons.add(new JButton("Add a user by IP"));
@@ -87,7 +87,7 @@ public class UserPanel extends JApplet implements ActionListener
                                                        // Handles any button clicks
       public void actionPerformed(ActionEvent e)
       {
-         String host;         // User's IP
+         String host;                                  // User's IP
 
          if(e.getSource() == buttons.get(0))           // User selected add IP manually button
          {
@@ -138,10 +138,10 @@ public class UserPanel extends JApplet implements ActionListener
 
             for(int i = 0; i < users.size(); i++)  // Loop through the users
             {
-                // Find out which User the button is associated with
+                                                  // Find out which User the button is associated with
                 if( ((JButton)e.getSource()).getText().equals(users.get(i).getUsername()))
                 {
-                    // change message panel to the selected user
+                                                  // change message panel to the selected user
                     window.changeToUser(users.get(i));
                 }
             }

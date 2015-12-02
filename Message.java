@@ -9,18 +9,18 @@ import java.awt.*;
 public class Message extends JPanel 
 {
 	public Message(String m, String username, Color color) 
-    //PRE: m and username are initialized
-    //POST: fills a JTextArea with the sender of the message and their message
-    {
-        JTextArea msg;                              //text area for new messages
+   //PRE: m, username, and color are initialized
+   //POST: Fills a JTextArea with color, the username of the sender, and their message
+   {
+      JTextArea msg;                              //text area for new messages
    
-		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        msg = new JTextArea("@" + username + ":\n" + m + "\n");   
-        add(msg);
-        msg.setEditable(false);       //can't edit text
-        msg.setLineWrap(true);        //wrap inside msg, don't flow over the end
-        msg.setWrapStyleWord(true);
+      setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+      msg = new JTextArea("@" + username + ":\n" + m + "\n");   
+      add(msg);
+      msg.setEditable(false);       //can't edit text
+      msg.setLineWrap(true);        //wrap inside msg, don't flow over the end
+      msg.setWrapStyleWord(true);
       
-        msg.setBackground(color);
-	}
+      msg.setBackground(color);
+   }
 }

@@ -5,34 +5,35 @@
 
 public class User 
 {
-	private String username;               //identifier for this User
-	private String host;                   //this User's IP address
-    private ChatPanel myPanel;             //instance of ChatPanel for this User
+   private String username;               //identifier for this User
+   private String host;                   //this User's IP address
+   private ChatPanel myPanel;             //instance of ChatPanel for this User
 
 	public User(String username, String host, Backend backendInstance) 
-    //PRE: username and host are initialized
-    //POST: sets username as username and host as host
-    {
+   //PRE: username, host, and backendInstance are initialized
+   //POST: Sets username as username and host as host. It also creates a new ChatPanel 
+   //      and adds it to the current user
+   {
 		this.username = username;
 		this.host = host;
 		myPanel = new ChatPanel(this, backendInstance, username);
 	}
 
 	public String getUsername() 
-    //POST: FCTVAL == username
-    {
+   //POST: FCTVAL == username
+   {
 		return username;
 	}
 
 	public ChatPanel getChatPanel()
-	//POST: FCTVAL == chatpanel
+	//POST: FCTVAL == myPanel
 	{
 		return myPanel;
 	}
 
 	public String getHost() 
-    //POST: FCTVAL == host
-    {
+   //POST: FCTVAL == host
+   {
 		return host;
 	}
 }
