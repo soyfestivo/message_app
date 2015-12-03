@@ -9,31 +9,31 @@ public class User
    private String host;                   //this User's IP address
    private ChatPanel myPanel;             //instance of ChatPanel for this User
 
-	public User(String username, String host, Backend backendInstance) 
+   public User(String username, String host, Backend backendInstance) 
    //PRE: username, host, and backendInstance are initialized
    //POST: Sets username as username and host as host. It also creates a new ChatPanel 
    //      and adds it to the current user
    {
-		this.username = username;
-		this.host = host;
-		myPanel = new ChatPanel(this, backendInstance, username);
-	}
+      this.username = username;
+      this.host = host;
+      myPanel = new ChatPanel(this, backendInstance, username);
+   }
 
-	public String getUsername() 
+   public String getUsername() 
    //POST: FCTVAL == username
    {
-		return username;
-	}
+      return username;
+   }
 
-	public ChatPanel getChatPanel()
-	//POST: FCTVAL == myPanel
-	{
-		return myPanel;
-	}
+   public ChatPanel getChatPanel()
+   //POST: FCTVAL == myPanel
+   {
+      return myPanel;
+   }
 
-	public String getHost() 
+   public String getHost() 
    //POST: FCTVAL == host
    {
-		return host;
-	}
+      return host;
+   }
 }

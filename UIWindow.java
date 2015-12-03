@@ -38,7 +38,7 @@ public class UIWindow extends JFrame
       width = 600;
       height = 400;
 
-      setLayout(new BorderLayout());		        //set layout of frame to border layout
+      setLayout(new BorderLayout());              //set layout of frame to border layout
       backend = new Backend(this);
 
       myUsername = backend.getMyUsername();       // get the current user's username
@@ -51,12 +51,12 @@ public class UIWindow extends JFrame
       chatPanel.msgReceived("You can send messages to yourself here or select one "
                             + "of the users from the left", "chat_bot");
 
-		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	 //set "close" functionality to close frame
-		setSize(width, height);						          //set size of frame
-		add(chatPanel, BorderLayout.CENTER);			    
+      
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);    //set "close" functionality to close frame
+      setSize(width, height);                            //set size of frame
+      add(chatPanel, BorderLayout.CENTER);             
       add(userPanel, BorderLayout.WEST);
-      setVisible(true);								           //make UI visible
+      setVisible(true);                                   //make UI visible
       
       try                                               //give time to find users
       {

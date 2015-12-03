@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class Message extends JPanel 
 {
-	public Message(String m, String username, Color color) 
+   public Message(String m, String username, Color color) 
    //PRE: m, username, and color are initialized
    //POST: Fills a JTextArea with color, the username of the sender, and their message
    {
