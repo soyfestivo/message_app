@@ -92,8 +92,11 @@ public class UserPanel extends JApplet implements ActionListener
          if(e.getSource() == buttons.get(0))           // User selected add IP manually button
          {
             host = addIP();                            // Prompt user for IP
-           
-            staticUser = backend.addStaticUser(host);  // Add static user to list
+         
+            if(host != "")
+            {
+                staticUser = backend.addStaticUser(host);  // Add static user to list
+            }
             
             if(staticUser == null)                     // If no User with that IP
             {
