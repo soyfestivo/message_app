@@ -1,7 +1,8 @@
 // Programmers:  Stephen Selke, Chris Griffith, Karen Bykowski
 // Assignment:   Project 4 - Messenger App
 // Date:         December 3, 2015
-// Description:  Backend for the messenger application
+// Description:  Backend for the messenger application. Handles finding other Users,
+//                  sending messages, and receiving messages.
 
 import java.net.*;
 import java.io.*;
@@ -23,24 +24,24 @@ public class Backend
 	private Thread incomingListener;                      //thread for listening
    private String myIP;                                  //current User's IP address
    private String myUsername;                            //current User's username
-   private UIWindow window;                              // front end connection
+   private UIWindow window;                              //front end connection
 
 
 	public Backend(UIWindow window) 
    //PRE:  window is initialized
    //POST: constructs an instance of the backend class 
    { 
-      InetAddress myAddress;                    //Current user's IP address
+      InetAddress myAddress;                //Current user's IP address
    
       setupThread();
       incomingListener.start();
       users = new ArrayList<User>();
       
-      setMyUsername();          //get the user's desired username
+      setMyUsername();                     //get the user's desired username
 
       this.window = window;
 
-      try 
+      try                                 //try to get current User's IP
       {   
          myAddress = InetAddress.getLocalHost();
          myIP = myAddress.getHostAddress();
@@ -52,7 +53,7 @@ public class Backend
          System.exit(0);
       }
 
-      scanLAN(16); // scan for new users
+      scanLAN(16);                        // scan for new Users
    }
 
    private void setMyUsername()
@@ -94,19 +95,19 @@ public class Backend
 
 	public ArrayList<User> getUsers() 
     //POST: FCTVAL == users
-    {
+   {
 		return users;
 	}
 
 	private class MiniScan extends Thread 
-    {
-		private int id;      //
-		private int min;     // minimum of scan range
+   {
+	   //private int id;      //
+      private int min;     // minimum of scan range
 		private int max;     // max of scan range
 
 		public MiniScan(int min, int max) 
-        //PRE:
-        //POST:
+        //PRE: min and max are valid 0-255
+        //POST: Scans the network
         {
 			super();
 
@@ -117,19 +118,18 @@ public class Backend
 
 		@Override
 		public void run() 
-        //PRE:
-        //POST:
-        {
+      //POST: Runs scanRange function
+      {
 			scanRange(min, max);
 		}
 	}
 
 	public void scanRange(int min, int max) 
-    //PRE: min and max are valid 0-255
-    //POST: will scan IPs: prefix+range(min, max)
-    {
-      User u;            // User the current user is trying to connect with
-      String[] myIPArr;  // ip split into chunks
+   //PRE: min and max are valid 0-255
+   //POST: Will scan IPs: prefix+range(min, max)
+   {
+      User u;            // User the current User is trying to connect with
+      String[] myIPArr;  // current User's IP split into chunks
       String prefix;     // the prefix of the current ip
       
 		myIPArr = me.getHost().split("\\.");
@@ -139,9 +139,9 @@ public class Backend
 			if(!me.getHost().equals(prefix + subAddress)) // don't add yourself
          { 
 				u = handshake(prefix + subAddress);
-				if(u != null) 
+		
+      		if(u != null)                             // if u isn't null
             {
-					System.out.println("Reply: " + u.getUsername() + "@" + u.getHost());
 					addUser(u);
 				}
 			}
@@ -150,16 +150,16 @@ public class Backend
 
 	private void addUser(User u) 
    //PRE: user is initialized
-   //POST: a new user will be added if it does not already exist
+   //POST: A new user will be added if it does not already exist
    {
 		for(User user : users) 
       {
 			if(user.getHost().equals(u.getHost())) 
          { 
-         	if(!user.getUsername().equals(u.getUsername())) // only re-add if they changed their username
+         	if(!user.getUsername().equals(u.getUsername())) //only re-add if they changed their username
          	{
-         		users.remove(user);
-				users.add(u);
+               users.remove(user);
+               users.add(u);
          	}
 				return;
 			}
@@ -168,15 +168,15 @@ public class Backend
 	}
 
 	public User addStaticUser(String host) 
-   //PRE: host is a valid 
+   //PRE: host is a valid IP address
    //POST: FCTVAL == u; the User you are connecting with
    {
-      User u;     // User the current user is trying to connect with
+      User u;           // User the current user is trying to connect with
          
       u = handshake(host);
       if(u != null)     // If you can connect with u
       {
-         addUser(u);  // Add them to users array
+         addUser(u);    // Add them to users array
       }
       return u;
    }
@@ -198,16 +198,16 @@ public class Backend
 
 
 	private User handshake(String host) 
-   //PRE: host is a valid ip address
-   //POST: try to make a connection with host, returns new user instance from host
+   //PRE: host is a valid IP address
+   //POST: Try to make a connection with host, returns new user instance from host
    {
-      String username;
-      char c;
+      String username;     // String representation for the user
+      char c;              // used in parsing the username
+      Socket connection;   // Socket to connect with
    
-		//System.out.println("handshake " + host);
       try 
       {
-         Socket connection = new Socket();
+         connection = new Socket();
          connection.connect(new InetSocketAddress(host, PUBLIC_PORT), 1000);
          OutputStream out = connection.getOutputStream();
          InputStream in = connection.getInputStream();
@@ -244,20 +244,19 @@ public class Backend
             InputStream in;            // the input stream of the connection
             OutputStream out;          // the output stream of the connection
          
-				openSocket = null;
+				openSocket = null;         // try to connect
 				try 
             {
 					openSocket = new ServerSocket(PUBLIC_PORT);
 				}
 	
-   			catch(Exception e) 
+   			catch(Exception e)         // we couldn't listen on the given port
             {
-            	// we couldn't listen on the given port
 					System.err.println("Cannot bind to port %d".format(""+PUBLIC_PORT));
 					System.exit(0);
 				}
 
-				while(true) // main loop
+				while(true)               // main loop; loops until window is closed
             {
 				   try 
                {
@@ -278,32 +277,32 @@ public class Backend
 
 	private void handelIncomingRequest(InputStream in, OutputStream out) 
    //PRE: in is valid, out is valid
-   //POST: we will handel the request properly
+   //POST: We will handle the request properly
    {
-      String header = "";
-		String message = "";
-		char c;
+      String header = "";     // header of the network packet
+		String message = "";    // message sent in the network packet
+		char c;                 // used to parse the header
 
 		try 
       {
-			while((c = (char) in.read()) != 0x0)      // read in header
+			while((c = (char) in.read()) != 0x0)               // read in header
          {
 		   	header += c;
 			}
          
-			if(header.equals(PROTOCOL_WHOIS))         //
+			if(header.equals(PROTOCOL_WHOIS))                  // if it is the WHOIS protocol
          {
 				out.write(me.getUsername().getBytes());
 				out.write(0x0);
 				out.flush();
 			}
          
-			else if(header.indexOf(PROTOCOL_FROM + ":") != -1) 
+			else if(header.indexOf(PROTOCOL_FROM + ":") != -1) // else if the from protocol is >= 0
          {
-				String[] parse;                          // 
+				String[] parse;                          
             
             parse = header.split(":");
-				while((c = (char) in.read()) != 0x0)     // read message 
+				while((c = (char) in.read()) != 0x0)            // read message 
             {
 					message += c;
 				}
@@ -331,7 +330,6 @@ public class Backend
       		return;                                            // display the message in ChatPanel
       	}
       }
-		System.out.println("@" + username + ": " + message); //////////////// REMOVE when complese
 	}
 
 
@@ -340,13 +338,13 @@ public class Backend
    //POST: the message will be sent
    {
       String header;          // header of the incoming packet
-      String m;               // 
-      Socket connection;      //
-      OutputStream out;       //
-      InputStream in;         //
-      char c;                 //used for parsing the header
+      String m;               // String for telling who is sending the packet
+      Socket connection;      // socket to connect with
+      OutputStream out;       // output stream of bytes
+      InputStream in;         // input stream of bytes
+      char c;                 // used for parsing the header
       
-		try 
+		try                                       // try to send the message
       {
 		   connection = new Socket(user.getHost(), PUBLIC_PORT);
 			out = connection.getOutputStream();

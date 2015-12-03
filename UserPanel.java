@@ -2,7 +2,7 @@
 // Assignment:   Project 4 - Messenger App
 // Date:         December 3, 2015
 // Description:  This class models the WEST panel of the GUI
-//               which holds a list of buttons for each user
+//                  which holds a list of buttons for each user
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -22,10 +22,10 @@ public class UserPanel extends JApplet implements ActionListener
       private int numUsers;                //total number of users online
 
       public UserPanel(ArrayList<User> u, Backend b, UIWindow window)
-      //PRE:  each user u, backend b and window is initialized 
-      //POST: a jpanel is created and is added to the GUI
+      //PRE:  Each user u, backend b and window is initialized 
+      //POST: A JPanel is created and is added to the GUI
       {
-         JLabel myIP;                      //lable at top of panel for ip
+         JLabel myIP;                      //label at top of panel for ip
 
          this.users = u;
          this.backend = b;
@@ -73,7 +73,7 @@ public class UserPanel extends JApplet implements ActionListener
 
          for (int i = 0; i < users.size(); i++) // iterate through each user
          {
-            int j = i + 2;
+            int j = i + 2;                     // start after second button
                                                // add a button for each user action
             if(users.get(i) != null)           // if users isn't empty, add a button for each User
             {           
@@ -141,7 +141,7 @@ public class UserPanel extends JApplet implements ActionListener
                                                   // Find out which User the button is associated with
                 if( ((JButton)e.getSource()).getText().equals(users.get(i).getUsername()))
                 {
-                                                  // change message panel to the selected user
+                                                  // Change message panel to the selected user
                     window.changeToUser(users.get(i));
                 }
             }

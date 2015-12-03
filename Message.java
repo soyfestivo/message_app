@@ -1,7 +1,7 @@
 // Programmers:  Stephen Selke, Chris Griffith, Karen Bykowski
 // Assignment:   Project 4 - Messenger App
 // Date:         December 3, 2015
-// Description:  Panel for displaying each of the messages
+// Description:  Panel for displaying each of the messages sent or received
 
 import javax.swing.*;
 import java.awt.*;

@@ -19,9 +19,9 @@ public class UIWindow extends JFrame
 {
    private Backend backend;         //insance of Backend class
    private ChatPanel chatPanel;     //panel for displaying messages and send button and text area
-   private UserPanel userPanel;    //panel to display the online Users
+   private UserPanel userPanel;     //panel to display the online Users
    private ArrayList<User> users;   //array of Users
-   private String myUsername;      //curent User's usernam
+   private String myUsername;       //curent User's usernam
 
    public UIWindow(String title) 
    //PRE:  title is initialized
@@ -56,16 +56,15 @@ public class UIWindow extends JFrame
 		setSize(width, height);						          //set size of frame
 		add(chatPanel, BorderLayout.CENTER);			    
       add(userPanel, BorderLayout.WEST);
-		//pack();									     //force resize elements of UI
-		setVisible(true);								           //make UI visible
+      setVisible(true);								           //make UI visible
       
-      try                                             //give time to find users
+      try                                               //give time to find users
       {
          Thread.sleep(4000);
       }
       catch(InterruptedException ie) {} 
    
-      userPanel.updatePanel();                        //add buttons for online users
+      userPanel.updatePanel();                          //add buttons for online users
       userPanel.revalidate();
       
    }

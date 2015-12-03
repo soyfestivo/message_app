@@ -1,9 +1,8 @@
 // Programmers:  Stephen Selke, Chris Griffith, Karen Bykowski
 // Assignment:   Project 4 - Messenger App
 // Date:         December 3, 2015
-// Description:  This class models the CENTER panel of the GUI
-//               and holds the text output from sending/receiving
-//               messages
+// Description:  This class models the CENTER panel of the GUI and holds
+//                  the text output from sending and receiving messages
 
 import java.util.ArrayList;
 import java.awt.Graphics;
@@ -37,9 +36,9 @@ public class ChatPanel extends JApplet implements ActionListener
    //      a message to send to User uname, and a send button.
    {
       JPanel mainPan;          //main panel for messages, area for sending messages, and send button
-      
       JPanel sendPan;          //panel holding components for sending message
-      JScrollPane scrollText;  //scroll pane for text area   
+      JScrollPane scrollText;  //scroll pane for text area 
+      JLabel threadTitle;      //tells the user who they are chatting with in that ChatPanel  
 
       sentColor = new Color(207, 235, 244);
       receiveColor = new Color(240, 240, 240);
@@ -52,7 +51,7 @@ public class ChatPanel extends JApplet implements ActionListener
       mainPan.setLayout(new BorderLayout());
       add(mainPan);
 
-      JLabel threadTitle = new JLabel("Chat with @" + uname);
+      threadTitle = new JLabel("Chat with @" + uname);
       threadTitle.setFont(new Font(threadTitle.getName(), Font.BOLD, 20));
       mainPan.add(threadTitle, BorderLayout.NORTH);
                                                       //set up panel the user interacts with
@@ -82,9 +81,9 @@ public class ChatPanel extends JApplet implements ActionListener
    
                                                      //actionPerformed for sendButton
    public void actionPerformed(ActionEvent e)
-    // POST: In the event that sendButton is pressed, sendMessage function from backend is called;
-    //       this sends the message to User uname.
-    {
+   // POST: In the event that sendButton is pressed, sendMessage function from backend is called;
+   //       this sends the message to User uname.
+   {
       if(e.getSource() == sendButton)     // Will only execute if the button is pressed
       {
          msgPan.add(new Message(msgField.getText(), myUsername, sentColor)); 
