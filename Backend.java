@@ -117,7 +117,7 @@ public class Backend
       }
 
       @Override
-      public synchronized void run() 
+      public void run() 
       //POST: Runs scanRange function
       {
          scanRange(min, max);
@@ -148,7 +148,7 @@ public class Backend
       }
    }
 
-   private void addUser(User u) 
+   private synchronized void addUser(User u) 
    //PRE: user is initialized
    //POST: A new user will be added if it does not already exist
    {
