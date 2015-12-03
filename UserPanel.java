@@ -96,14 +96,14 @@ public class UserPanel extends JApplet implements ActionListener
             if(!host.equals(""))
             {
                 staticUser = backend.addStaticUser(host);  // Add static user to list
+            
+                if(staticUser == null)                     // If no User with that IP
+                {
+                    JOptionPane.showMessageDialog(null, "There is not a user with that IP.", 
+                                             "No such user", JOptionPane.WARNING_MESSAGE);
+                }
             }
             
-            if(staticUser == null)                     // If no User with that IP
-            {
-               JOptionPane.showMessageDialog(null, "There is not a user with that IP.", 
-                                             "No such user", JOptionPane.WARNING_MESSAGE);
-            }
-
             users = backend.getUsers();                // Update this users list
          
             updatePanel();
