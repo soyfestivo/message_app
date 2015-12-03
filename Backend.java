@@ -117,7 +117,7 @@ public class Backend
       }
 
       @Override
-      public void run() 
+      public synchronized void run() 
       //POST: Runs scanRange function
       {
          scanRange(min, max);
