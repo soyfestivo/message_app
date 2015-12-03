@@ -29,12 +29,7 @@ public class Backend
 	public Backend(UIWindow window) 
    //PRE:  window is initialized
    //POST: constructs an instance of the backend class 
-   {  ////
-      InetAddress[] n;                          // 
-      Enumeration<NetworkInterface> addresses;  // 
-      NetworkInterface ni;                      //
-      Enumeration<InetAddress> e;               //
-      InetAddress ia;                           //
+   { 
       InetAddress myAddress;                    //Current user's IP address
    
       setupThread();
@@ -46,40 +41,9 @@ public class Backend
       this.window = window;
 
       try 
-      { 
-
-      	////////////// testing for chris
-         n = InetAddress.getAllByName("google.com");
-
-      	//System.out.println("Address: " + n.toString());
-         for(InetAddress iiiiii : n) 
-         {
-          	 	//System.out.println("~  " + iiiiii.getLocalHost().getHostAddress());
-         }
-          
-         addresses = NetworkInterface.getNetworkInterfaces();
-
-         while(addresses.hasMoreElements()                 // get the addresses
-              && (ni = addresses.nextElement()) != null) 
-         {
-            e = ni.getInetAddresses();
-          	 
-          	 //System.out.println("Address: " + ni.toString());
-          	 while(e.hasMoreElements() && (ia = e.nextElement()) != null) 
-             {
-          	 	//System.out.println("  " + ia.getLocalHost().getHostAddress());
-          	 }
-          	
-         }
-        ////////////// testing for chris
-          
+      {   
          myAddress = InetAddress.getLocalHost();
          myIP = myAddress.getHostAddress();
-			
-        //System.out.println("My address: " + myAddress.getHostAddress());
-        System.out.println("My address: " + myIP);   /////////////////////REMOVE when complete; for debugging
-	    //me = new User("soyfestivo", myAddress.getHostAddress());
-          
          me = new User(myUsername, myAddress.getHostAddress(), this);
       }
       catch(Exception ex) 
@@ -88,33 +52,7 @@ public class Backend
          System.exit(0);
       }
 
-      scanLAN(16);
-
-		/*Thread console = new Thread() {
-			public void run() {
-				Scanner scanner = new Scanner(System.in);
-				boolean foundCommand;
-				boolean running = true;
-				try {
-					while(running) {
-						String input = scanner.nextLine();
-
-						if(input.indexOf("exit") == 0 || input.equals("disconnect")) {
-							System.exit(0);
-						}
-						if(input.indexOf("send") != -1) {
-							String[] a = input.split(" ");
-							sendMessage(new User(a[1], a[2]), a[3]); // send soyfestivo 192.168.0.111 HELLO!!!!!
-						}
-					}
-				}
-				catch(Exception e) {
-
-				}
-			}
-		};
-
-		console.start();*/
+      scanLAN(16); // scan for new users
    }
 
    private void setMyUsername()
@@ -163,8 +101,8 @@ public class Backend
 	private class MiniScan extends Thread 
     {
 		private int id;      //
-		private int min;     //
-		private int max;     //
+		private int min;     // minimum of scan range
+		private int max;     // max of scan range
 
 		public MiniScan(int min, int max) 
         //PRE:
@@ -187,12 +125,12 @@ public class Backend
 	}
 
 	public void scanRange(int min, int max) 
-    //PRE:
-    //POST:
+    //PRE: min and max are valid 0-255
+    //POST: will scan IPs: prefix+range(min, max)
     {
       User u;            // User the current user is trying to connect with
-      String[] myIPArr;  //
-      String prefix;     //   
+      String[] myIPArr;  // ip split into chunks
+      String prefix;     // the prefix of the current ip
       
 		myIPArr = me.getHost().split("\\.");
 		prefix = myIPArr[0] + "." + myIPArr[1] + "." + myIPArr[2] + ".";
@@ -211,15 +149,18 @@ public class Backend
 	}
 
 	private void addUser(User u) 
-   //PRE:
-   //POST:
+   //PRE: user is initialized
+   //POST: a new user will be added if it does not already exist
    {
 		for(User user : users) 
       {
 			if(user.getHost().equals(u.getHost())) 
-         {
-				users.remove(user);
+         { 
+         	if(!user.getUsername().equals(u.getUsername())) // only re-add if they changed their username
+         	{
+         		users.remove(user);
 				users.add(u);
+         	}
 				return;
 			}
 		}
@@ -242,10 +183,10 @@ public class Backend
 
 
 	public void scanLAN(int split) 
-   //PRE:
-   //POST:
+   //PRE: split is the thread count
+   //POST: scan local area network, with split # of threads
    {
-      int groupSize;    // 
+      int groupSize;    // size of scan range
       
       groupSize = 256 / split;
 
@@ -257,8 +198,8 @@ public class Backend
 
 
 	private User handshake(String host) 
-   //PRE:
-   //POST:
+   //PRE: host is a valid ip address
+   //POST: try to make a connection with host, returns new user instance from host
    {
       String username;
       char c;
@@ -291,19 +232,17 @@ public class Backend
 	}
 
 	private void setupThread() 
-   //PRE:
-   //POST:
+   //POST: a new listening thread will be created
    {
       incomingListener = new Thread() 
       {
    		public void run() 
-         //PRE:
-         //POST:
+         //POST: thread will run
          {
-            ServerSocket openSocket;   //
-            Socket connection;         //
-            InputStream in;            //
-            OutputStream out;          //
+            ServerSocket openSocket;   // the server socket for listening
+            Socket connection;         // a given connection
+            InputStream in;            // the input stream of the connection
+            OutputStream out;          // the output stream of the connection
          
 				openSocket = null;
 				try 
@@ -313,15 +252,16 @@ public class Backend
 	
    			catch(Exception e) 
             {
+            	// we couldn't listen on the given port
 					System.err.println("Cannot bind to port %d".format(""+PUBLIC_PORT));
 					System.exit(0);
 				}
 
-				while(true) 
+				while(true) // main loop
             {
 				   try 
                {
-				   	connection = openSocket.accept();
+				   	connection = openSocket.accept(); // blocking accept function, waiting for 
 						in = connection.getInputStream();
 						out = connection.getOutputStream();
 						handelIncomingRequest(in, out);
@@ -337,8 +277,8 @@ public class Backend
 
 
 	private void handelIncomingRequest(InputStream in, OutputStream out) 
-   //PRE:
-   //POST:
+   //PRE: in is valid, out is valid
+   //POST: we will handel the request properly
    {
       String header = "";
 		String message = "";
@@ -379,8 +319,8 @@ public class Backend
 
 
 	private void messageNotify(String username, String message) 
-   //PRE:
-   //POST:
+   //PRE:  username and message is valid
+   //POST: the user's ChatPanel will be updated
    {
       for(User u : users) 
       {
@@ -396,8 +336,8 @@ public class Backend
 
 
 	public boolean sendMessage(User user, String message) 
-   //PRE:
-   //POST:
+   //PRE: user is valid
+   //POST: the message will be sent
    {
       String header;          // header of the incoming packet
       String m;               // 
