@@ -87,7 +87,11 @@ public class ChatPanel extends JApplet implements ActionListener
       if(e.getSource() == sendButton)     // Will only execute if the button is pressed
       {
          msgPan.add(new Message(msgField.getText(), myUsername, sentColor)); 
-         backend.sendMessage(user, msgField.getText());
+         if(!backend.sendMessage(user, msgField.getText())) //if User offline, don't send the message
+         {
+            JOptionPane.showMessageDialog(null, "User is offline. Your message has not been sent.",
+                                          "Sad face", JOptionPane.WARNING_MESSAGE);
+         }
          
          msgField.setText("");            //sets msgField to be blank after message has been sent
          msgField.requestFocus();         //puts the cursor in msgField
