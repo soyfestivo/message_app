@@ -346,7 +346,8 @@ public class Backend
       
       try                                       // try to send the message
       {
-         connection = new Socket(user.getHost(), PUBLIC_PORT);
+         connection = new Socket();
+         connection.connect(new InetSocketAddress(user.getHost(), PUBLIC_PORT), 1500);
          out = connection.getOutputStream();
          in = connection.getInputStream();
 
